@@ -1,0 +1,308 @@
+{
+  "elements": [
+    {
+      "id": 4471712872,
+      "type": "node",
+      "timestamp": "2021-09-24T20:58:39Z",
+      "lat": -33.4250727,
+      "lon": -70.6131696,
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "1920",
+        "addr:street": "Avenida Nueva Providencia",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Centro Médico y Dental RedSalud"
+      }
+    },
+    {
+      "id": 6058954062,
+      "type": "node",
+      "timestamp": "2018-11-13T23:59:10Z",
+      "lat": -33.4268963,
+      "lon": -70.6033784,
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "780",
+        "addr:street": "Avenida Los Leones",
+        "amenity": "dentist",
+        "healthcare": "dentist",
+        "healthcare:speciality": "clinic",
+        "name": "Clínica Carmona"
+      }
+    },
+    {
+      "id": 6650618285,
+      "type": "node",
+      "timestamp": "2025-10-23T22:32:09Z",
+      "lat": -33.4235792,
+      "lon": -70.608872,
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "222",
+        "addr:street": "Avenida Ricardo Lyon",
+        "amenity": "doctors",
+        "healthcare": "doctor",
+        "name": "Clini Salud"
+      }
+    },
+    {
+      "id": 13381989510,
+      "type": "node",
+      "timestamp": "2025-12-16T19:42:38Z",
+      "lat": -33.4210966,
+      "lon": -70.6076495,
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "42",
+        "addr:street": "Avenida Suecia",
+        "addr:unit": "703",
+        "amenity": "dentist",
+        "healthcare": "dentist",
+        "name": "Odontología Especializada Nueva Suecia"
+      }
+    },
+    {
+      "id": 61699542,
+      "type": "way",
+      "timestamp": "2023-06-09T23:00:09Z",
+      "center": {
+        "lat": -33.431444125,
+        "lon": -70.6082825
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "2063",
+        "addr:street": "Eliodoro Yáñez",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Centro Médico y Profesional Las Lilas"
+      }
+    },
+    {
+      "id": 265828167,
+      "type": "way",
+      "timestamp": "2023-12-23T15:13:20Z",
+      "center": {
+        "lat": -33.42822253181818,
+        "lon": -70.59555656363636
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "2820",
+        "addr:street": "Eliodoro Yáñez",
+        "amenity": "clinic",
+        "name": "Clínica El Bosque"
+      }
+    },
+    {
+      "id": 282064110,
+      "type": "way",
+      "timestamp": "2023-06-24T18:12:50Z",
+      "center": {
+        "lat": -33.4240437,
+        "lon": -70.6045915
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "465",
+        "addr:street": "Avenida Los Leones",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Clínica NovaLight, Cirugía plástica"
+      }
+    },
+    {
+      "id": 292669936,
+      "type": "way",
+      "timestamp": "2025-04-20T04:01:57Z",
+      "center": {
+        "lat": -33.42342796,
+        "lon": -70.60481259999999
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:street": "Avenida Los Leones",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Clínica Oftalmológica"
+      }
+    },
+    {
+      "id": 297288268,
+      "type": "way",
+      "timestamp": "2019-03-22T01:22:57Z",
+      "center": {
+        "lat": -33.4254323,
+        "lon": -70.6120631125
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "195",
+        "addr:street": "Avenida Pedro de Valdivia",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Sanasalud",
+        "operator": "Sanasalud",
+        "website": "https://www.sanasalud.cl/"
+      }
+    },
+    {
+      "id": 300384020,
+      "type": "way",
+      "timestamp": "2023-06-24T18:12:32Z",
+      "center": {
+        "lat": -33.427866441666666,
+        "lon": -70.611092275
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "483",
+        "addr:street": "Avenida Pedro de Valdivia",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Clínica Europa"
+      }
+    },
+    {
+      "id": 300387076,
+      "type": "way",
+      "timestamp": "2024-02-05T22:38:02Z",
+      "center": {
+        "lat": -33.42952465,
+        "lon": -70.61213273333333
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "550",
+        "addr:street": "Marchant Pereira",
+        "amenity": "doctors",
+        "healthcare": "doctor",
+        "healthcare:speciality": "psychiatry",
+        "name": "Instituto Milton H. Erickson"
+      }
+    },
+    {
+      "id": 307633936,
+      "type": "way",
+      "timestamp": "2024-03-26T17:05:05Z",
+      "center": {
+        "lat": -33.42979200571429,
+        "lon": -70.61442852571429
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "360",
+        "addr:street": "Avenida Antonio Varas",
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "healthcare:speciality": "paediatrics",
+        "name": "Hospital de Niños Calvo Mackenna",
+        "website": "https://calvomackenna.cl/"
+      }
+    },
+    {
+      "id": 544053272,
+      "type": "way",
+      "timestamp": "2023-12-23T15:13:20Z",
+      "center": {
+        "lat": -33.42466907777778,
+        "lon": -70.6105054111111
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "2116",
+        "addr:street": "Barcelona",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Integramédica Barcelona",
+        "operator": "Integramédica"
+      }
+    },
+    {
+      "id": 555510405,
+      "type": "way",
+      "timestamp": "2025-12-10T22:38:47Z",
+      "center": {
+        "lat": -33.427169975,
+        "lon": -70.61066285
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "438",
+        "addr:street": "Avenida Pedro de Valdivia",
+        "amenity": "doctors",
+        "healthcare": "doctor",
+        "name": "Mutual de Seguridad"
+      }
+    },
+    {
+      "id": 589549242,
+      "type": "way",
+      "timestamp": "2023-12-23T15:13:25Z",
+      "center": {
+        "lat": -33.42486316,
+        "lon": -70.6106768
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:street": "Barcelona",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Integramédica Barcelona (Torre 2)"
+      }
+    },
+    {
+      "id": 643999377,
+      "type": "way",
+      "timestamp": "2023-12-23T15:13:25Z",
+      "center": {
+        "lat": -33.4242129,
+        "lon": -70.60463335
+      },
+      "tags": {
+        "addr:city": "Providencia",
+        "addr:housenumber": "485",
+        "addr:street": "Avenida Los Leones",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "healthcare:speciality": "surgery;plastic_surgery",
+        "name": "Clínica WLK"
+      }
+    },
+    {
+      "id": 11943172038,
+      "type": "node",
+      "timestamp": "2024-05-29T21:39:50Z",
+      "lat": -33.4103295,
+      "lon": -70.6313644,
+      "tags": {
+        "addr:city": "Recoleta",
+        "addr:housenumber": "1892",
+        "addr:street": "Adrián Miranda",
+        "amenity": "doctors",
+        "healthcare": "doctor",
+        "healthcare:speciality": "emergency",
+        "name": "Sapu Valdivieso"
+      }
+    },
+    {
+      "id": 1168166262,
+      "type": "way",
+      "timestamp": "2024-11-16T23:59:58Z",
+      "center": {
+        "lat": -33.44214893478261,
+        "lon": -70.64178162608695
+      },
+      "tags": {
+        "addr:city": "Santiago",
+        "addr:housenumber": "420",
+        "addr:street": "Avenida Libertador Bernardo O'Higgins",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Centro Médico Santa Lucía",
+        "operator": "UC Christus"
+      }
+    }
+  ]
+}

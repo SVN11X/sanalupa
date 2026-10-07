@@ -1,0 +1,1384 @@
+{
+  "schemaVersion": 1,
+  "publishedAt": "2026-10-07",
+  "geography": "37 comunas: criterio funcional INE 2020; ampliación seleccionable a 52 comunas RM",
+  "sources": [
+    {
+      "id": "osm",
+      "name": "OpenStreetMap",
+      "owner": "OpenStreetMap contributors / OSMF",
+      "url": "https://www.openstreetmap.org/",
+      "policyUrl": "https://www.openstreetmap.org/copyright",
+      "status": "enabled",
+      "license": "ODbL-1.0",
+      "mayPublish": true,
+      "mayRetain": true,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-07",
+      "attribution": "© OpenStreetMap contributors",
+      "notes": "18 centros cartografiados. No acredita profesionales ni confirma atención actual."
+    },
+    {
+      "id": "rnpi",
+      "name": "Registro oficial de prestadores",
+      "owner": "Superintendencia de Salud",
+      "url": "https://rnpi.superdesalud.gob.cl/",
+      "policyUrl": "https://apis-documentacion.superdesalud.gob.cl/_sections/02-intro.html",
+      "status": "pending",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-07",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "Consulta manual gratuita. API exige solicitud formal; importación desactivada."
+    },
+    {
+      "id": "doctoralia",
+      "name": "Doctoralia Chile",
+      "owner": "Doctoralia Internet SL",
+      "url": "https://www.doctoralia.cl/",
+      "policyUrl": "https://www.doctoralia.cl/terminos-y-condiciones",
+      "status": "pending",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-07",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "Sin autorización de agregación. Solo enlace externo."
+    },
+    {
+      "id": "redsalud",
+      "name": "Buscador institucional",
+      "owner": "Empresas Red Salud S.A.",
+      "url": "https://www.redsalud.cl/buscador-de-medicos",
+      "policyUrl": "https://www.redsalud.cl/assets/media/tyc-pagina-web.pdf",
+      "status": "pending",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-07",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "Reproducción requiere autorización. Los nombres de centros en este catálogo proceden de OSM."
+    },
+    {
+      "id": "ucchristus",
+      "name": "UC CHRISTUS",
+      "owner": "Red de Salud UC CHRISTUS",
+      "url": "https://www.ucchristus.cl/",
+      "policyUrl": "https://www.ucchristus.cl/docs/default-source/pdf/condiciones-de-uso-web.pdf?sfvrsn=7e016a4a_2",
+      "status": "pending",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-07",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "No se obtuvo permiso para publicar su directorio."
+    },
+    {
+      "id": "google",
+      "name": "Google Places",
+      "owner": "Google",
+      "url": "https://developers.google.com/maps/documentation/places/web-service/",
+      "policyUrl": "https://cloud.google.com/maps-platform/terms",
+      "status": "incompatible",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-07",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "Requiere facturación. Sus datos no se incorporan a OSM ni a este catálogo."
+    },
+    {
+      "id": "apify",
+      "name": "Apify",
+      "owner": "Apify",
+      "url": "https://apify.com/pricing",
+      "policyUrl": "https://apify.com/pricing",
+      "status": "discarded",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-07",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "Créditos gratuitos limitados; no conceden derechos sobre otras fuentes."
+    },
+    {
+      "id": "outscraper",
+      "name": "Outscraper",
+      "owner": "Outscraper",
+      "url": "https://outscraper.com/pricing/",
+      "policyUrl": "https://outscraper.com/pricing/",
+      "status": "discarded",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-07",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "Tramos gratuitos limitados; sin permiso de reutilización de la fuente original."
+    }
+  ],
+  "professionals": [],
+  "organizations": [
+    {
+      "id": "org:osm:node:4471712872",
+      "name": {
+        "value": "Centro Médico y Dental RedSalud",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/4471712872",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2021-09-24T20:58:39Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:node:6058954062",
+      "name": {
+        "value": "Clínica Carmona",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6058954062",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2018-11-13T23:59:10Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:node:6650618285",
+      "name": {
+        "value": "Clini Salud",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6650618285",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-10-23T22:32:09Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:node:13381989510",
+      "name": {
+        "value": "Odontología Especializada Nueva Suecia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/13381989510",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-16T19:42:38Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:61699542",
+      "name": {
+        "value": "Centro Médico y Profesional Las Lilas",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/61699542",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-09T23:00:09Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:265828167",
+      "name": {
+        "value": "Clínica El Bosque",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/265828167",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:282064110",
+      "name": {
+        "value": "Clínica NovaLight, Cirugía plástica",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/282064110",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:50Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:292669936",
+      "name": {
+        "value": "Clínica Oftalmológica",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/292669936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-04-20T04:01:57Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:297288268",
+      "name": {
+        "value": "Sanasalud",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/297288268",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2019-03-22T01:22:57Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:300384020",
+      "name": {
+        "value": "Clínica Europa",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300384020",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:32Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:300387076",
+      "name": {
+        "value": "Instituto Milton H. Erickson",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300387076",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-02-05T22:38:02Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:307633936",
+      "name": {
+        "value": "Hospital de Niños Calvo Mackenna",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/307633936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-03-26T17:05:05Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:544053272",
+      "name": {
+        "value": "Integramédica",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/544053272",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:555510405",
+      "name": {
+        "value": "Mutual de Seguridad",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/555510405",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-10T22:38:47Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:589549242",
+      "name": {
+        "value": "Integramédica Barcelona (Torre 2)",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/589549242",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:643999377",
+      "name": {
+        "value": "Clínica WLK",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/643999377",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:node:11943172038",
+      "name": {
+        "value": "Sapu Valdivieso",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/11943172038",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-05-29T21:39:50Z",
+          "statement": "source_record"
+        }
+      }
+    },
+    {
+      "id": "org:osm:way:1168166262",
+      "name": {
+        "value": "UC Christus",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/1168166262",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-11-16T23:59:58Z",
+          "statement": "source_record"
+        }
+      }
+    }
+  ],
+  "sites": [
+    {
+      "id": "osm:node:4471712872",
+      "organizationId": "org:osm:node:4471712872",
+      "name": {
+        "value": "Centro Médico y Dental RedSalud",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/4471712872",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2021-09-24T20:58:39Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Nueva Providencia 1920",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/4471712872",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2021-09-24T20:58:39Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/4471712872",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2021-09-24T20:58:39Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.4250727,
+        "lon": -70.6131696,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/4471712872",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2021-09-24T20:58:39Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:node:6058954062",
+      "organizationId": "org:osm:node:6058954062",
+      "name": {
+        "value": "Clínica Carmona",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6058954062",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2018-11-13T23:59:10Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Los Leones 780",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6058954062",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2018-11-13T23:59:10Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6058954062",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2018-11-13T23:59:10Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.4268963,
+        "lon": -70.6033784,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6058954062",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2018-11-13T23:59:10Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "dental",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:node:6650618285",
+      "organizationId": "org:osm:node:6650618285",
+      "name": {
+        "value": "Clini Salud",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6650618285",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-10-23T22:32:09Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Ricardo Lyon 222",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6650618285",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-10-23T22:32:09Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6650618285",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-10-23T22:32:09Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.4235792,
+        "lon": -70.608872,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/6650618285",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-10-23T22:32:09Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "practice",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:node:13381989510",
+      "organizationId": "org:osm:node:13381989510",
+      "name": {
+        "value": "Odontología Especializada Nueva Suecia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/13381989510",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-16T19:42:38Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Suecia 42 oficina 703",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/13381989510",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-16T19:42:38Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/13381989510",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-16T19:42:38Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.4210966,
+        "lon": -70.6076495,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/13381989510",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-16T19:42:38Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "dental",
+      "services": [
+        {
+          "value": "Odontología",
+          "evidence": {
+            "sourceId": "osm",
+            "url": "https://www.openstreetmap.org/node/13381989510",
+            "checkedAt": "2026-10-07",
+            "sourceUpdatedAt": "2025-12-16T19:42:38Z",
+            "statement": "source_record"
+          }
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "osm:way:61699542",
+      "organizationId": "org:osm:way:61699542",
+      "name": {
+        "value": "Centro Médico y Profesional Las Lilas",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/61699542",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-09T23:00:09Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Eliodoro Yáñez 2063",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/61699542",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-09T23:00:09Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/61699542",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-09T23:00:09Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.431444125,
+        "lon": -70.6082825,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/61699542",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-09T23:00:09Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:265828167",
+      "organizationId": "org:osm:way:265828167",
+      "name": {
+        "value": "Clínica El Bosque",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/265828167",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Eliodoro Yáñez 2820",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/265828167",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/265828167",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.42822253181818,
+        "lon": -70.59555656363636,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/265828167",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:282064110",
+      "organizationId": "org:osm:way:282064110",
+      "name": {
+        "value": "Clínica NovaLight, Cirugía plástica",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/282064110",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:50Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Los Leones 465",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/282064110",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:50Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/282064110",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:50Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.4240437,
+        "lon": -70.6045915,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/282064110",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:50Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:292669936",
+      "organizationId": "org:osm:way:292669936",
+      "name": {
+        "value": "Clínica Oftalmológica",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/292669936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-04-20T04:01:57Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Los Leones",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/292669936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-04-20T04:01:57Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/292669936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-04-20T04:01:57Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.42342796,
+        "lon": -70.60481259999999,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/292669936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-04-20T04:01:57Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:297288268",
+      "organizationId": "org:osm:way:297288268",
+      "name": {
+        "value": "Sanasalud",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/297288268",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2019-03-22T01:22:57Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Pedro de Valdivia 195",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/297288268",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2019-03-22T01:22:57Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/297288268",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2019-03-22T01:22:57Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.4254323,
+        "lon": -70.6120631125,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/297288268",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2019-03-22T01:22:57Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": {
+        "value": "https://www.sanasalud.cl/",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/297288268",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2019-03-22T01:22:57Z",
+          "statement": "source_record"
+        }
+      },
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:300384020",
+      "organizationId": "org:osm:way:300384020",
+      "name": {
+        "value": "Clínica Europa",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300384020",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:32Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Pedro de Valdivia 483",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300384020",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:32Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300384020",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:32Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.427866441666666,
+        "lon": -70.611092275,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300384020",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-06-24T18:12:32Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:300387076",
+      "organizationId": "org:osm:way:300387076",
+      "name": {
+        "value": "Instituto Milton H. Erickson",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300387076",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-02-05T22:38:02Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Marchant Pereira 550",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300387076",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-02-05T22:38:02Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300387076",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-02-05T22:38:02Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.42952465,
+        "lon": -70.61213273333333,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/300387076",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-02-05T22:38:02Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "practice",
+      "services": [
+        {
+          "value": "Psiquiatría",
+          "evidence": {
+            "sourceId": "osm",
+            "url": "https://www.openstreetmap.org/way/300387076",
+            "checkedAt": "2026-10-07",
+            "sourceUpdatedAt": "2024-02-05T22:38:02Z",
+            "statement": "source_record"
+          }
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "osm:way:307633936",
+      "organizationId": "org:osm:way:307633936",
+      "name": {
+        "value": "Hospital de Niños Calvo Mackenna",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/307633936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-03-26T17:05:05Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Antonio Varas 360",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/307633936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-03-26T17:05:05Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/307633936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-03-26T17:05:05Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.42979200571429,
+        "lon": -70.61442852571429,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/307633936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-03-26T17:05:05Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": {
+        "value": "https://calvomackenna.cl/",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/307633936",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-03-26T17:05:05Z",
+          "statement": "source_record"
+        }
+      },
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "hospital",
+      "services": [
+        {
+          "value": "Pediatría",
+          "evidence": {
+            "sourceId": "osm",
+            "url": "https://www.openstreetmap.org/way/307633936",
+            "checkedAt": "2026-10-07",
+            "sourceUpdatedAt": "2024-03-26T17:05:05Z",
+            "statement": "source_record"
+          }
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "osm:way:544053272",
+      "organizationId": "org:osm:way:544053272",
+      "name": {
+        "value": "Integramédica Barcelona",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/544053272",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Barcelona 2116",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/544053272",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/544053272",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.42466907777778,
+        "lon": -70.6105054111111,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/544053272",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:20Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:555510405",
+      "organizationId": "org:osm:way:555510405",
+      "name": {
+        "value": "Mutual de Seguridad",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/555510405",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-10T22:38:47Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Pedro de Valdivia 438",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/555510405",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-10T22:38:47Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/555510405",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-10T22:38:47Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.427169975,
+        "lon": -70.61066285,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/555510405",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2025-12-10T22:38:47Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "practice",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:589549242",
+      "organizationId": "org:osm:way:589549242",
+      "name": {
+        "value": "Integramédica Barcelona (Torre 2)",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/589549242",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Barcelona",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/589549242",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/589549242",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.42486316,
+        "lon": -70.6106768,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/589549242",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:643999377",
+      "organizationId": "org:osm:way:643999377",
+      "name": {
+        "value": "Clínica WLK",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/643999377",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Los Leones 485",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/643999377",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Providencia",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/643999377",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.4242129,
+        "lon": -70.60463335,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/643999377",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [
+        {
+          "value": "Cirugía plástica",
+          "evidence": {
+            "sourceId": "osm",
+            "url": "https://www.openstreetmap.org/way/643999377",
+            "checkedAt": "2026-10-07",
+            "sourceUpdatedAt": "2023-12-23T15:13:25Z",
+            "statement": "source_record"
+          }
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "osm:node:11943172038",
+      "organizationId": "org:osm:node:11943172038",
+      "name": {
+        "value": "Sapu Valdivieso",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/11943172038",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-05-29T21:39:50Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Adrián Miranda 1892",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/11943172038",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-05-29T21:39:50Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Recoleta",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/11943172038",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-05-29T21:39:50Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.4103295,
+        "lon": -70.6313644,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/node/11943172038",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-05-29T21:39:50Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "practice",
+      "services": [],
+      "active": true
+    },
+    {
+      "id": "osm:way:1168166262",
+      "organizationId": "org:osm:way:1168166262",
+      "name": {
+        "value": "Centro Médico Santa Lucía",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/1168166262",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-11-16T23:59:58Z",
+          "statement": "source_record"
+        }
+      },
+      "address": {
+        "value": "Avenida Libertador Bernardo O'Higgins 420",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/1168166262",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-11-16T23:59:58Z",
+          "statement": "source_record"
+        }
+      },
+      "commune": {
+        "value": "Santiago",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/1168166262",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-11-16T23:59:58Z",
+          "statement": "source_record"
+        }
+      },
+      "location": {
+        "lat": -33.44214893478261,
+        "lon": -70.64178162608695,
+        "precision": "approximate",
+        "evidence": {
+          "sourceId": "osm",
+          "url": "https://www.openstreetmap.org/way/1168166262",
+          "checkedAt": "2026-10-07",
+          "sourceUpdatedAt": "2024-11-16T23:59:58Z",
+          "statement": "source_record"
+        }
+      },
+      "contactUrl": null,
+      "bookingUrl": null,
+      "priceCLP": null,
+      "agreements": null,
+      "kind": "clinic",
+      "services": [],
+      "active": true
+    }
+  ],
+  "ratings": [],
+  "removedIds": []
+}

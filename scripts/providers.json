@@ -1,0 +1,121 @@
+{
+  "osm": {
+    "enabled": true,
+    "mayPublish": true,
+    "domains": [],
+    "fields": [
+      "name",
+      "operator",
+      "addr:city",
+      "addr:street",
+      "addr:housenumber",
+      "addr:unit",
+      "amenity",
+      "healthcare",
+      "healthcare:speciality",
+      "lat",
+      "lon",
+      "nodes",
+      "timestamp",
+      "website"
+    ],
+    "minIntervalMs": 1100,
+    "timeoutMs": 25000,
+    "maxRequests": 6,
+    "maxBytes": 5000000,
+    "retries": 1,
+    "frequency": "local_snapshot_import",
+    "reviewedAt": "2026-10-07",
+    "license": "ODbL-1.0",
+    "attribution": "\u00a9 OpenStreetMap contributors",
+    "reason": "Enabled for licensed local extracts only. No scheduled access to the OSM editing API."
+  },
+  "overpass": {
+    "enabled": false,
+    "mayPublish": true,
+    "domains": [
+      "overpass.private.coffee"
+    ],
+    "endpoint": "https://overpass.private.coffee/api/interpreter",
+    "fields": [
+      "name",
+      "operator",
+      "addr:city",
+      "addr:street",
+      "addr:housenumber",
+      "addr:unit",
+      "amenity",
+      "healthcare",
+      "healthcare:speciality",
+      "lat",
+      "lon",
+      "nodes",
+      "timestamp",
+      "website"
+    ],
+    "minIntervalMs": 30000,
+    "timeoutMs": 25000,
+    "maxRequests": 2,
+    "maxBytes": 5000000,
+    "retries": 1,
+    "frequency": "weekly_opt_in_after_access_and_policy_review",
+    "reviewedAt": "2026-10-07",
+    "license": "ODbL-1.0",
+    "reason": "Read-only adapter available; observed timeouts. Keep disabled until successful access and robots/policy review. No endpoint rotation."
+  },
+  "rnpi": {
+    "enabled": false,
+    "domains": [
+      "apis-portal.superdesalud.gob.cl"
+    ],
+    "fields": [
+      "title",
+      "registeredSpecialties"
+    ],
+    "reason": "Formal access and publication authorization required; no API key. Manual official lookup only."
+  },
+  "doctoralia": {
+    "enabled": false,
+    "domains": [
+      "www.doctoralia.cl"
+    ],
+    "fields": [],
+    "reason": "No integration/republication permission obtained. External links only."
+  },
+  "redsalud": {
+    "enabled": false,
+    "domains": [
+      "www.redsalud.cl"
+    ],
+    "fields": [],
+    "reason": "Terms require prior authorization for content reproduction."
+  },
+  "ucchristus": {
+    "enabled": false,
+    "domains": [
+      "www.ucchristus.cl"
+    ],
+    "fields": [],
+    "reason": "No permission for republication obtained."
+  },
+  "nominatim": {
+    "enabled": false,
+    "fields": [],
+    "reason": "Coordinates already available; no geocoding requests, autocomplete or systematic queries."
+  },
+  "googlePlaces": {
+    "enabled": false,
+    "fields": [],
+    "reason": "Billing required and restrictions incompatible with static OSM catalogue."
+  },
+  "apify": {
+    "enabled": false,
+    "fields": [],
+    "reason": "Limited free credits do not confer rights on source data."
+  },
+  "outscraper": {
+    "enabled": false,
+    "fields": [],
+    "reason": "Metered free tier and no source republication rights."
+  }
+}

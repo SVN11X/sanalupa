@@ -1,0 +1,14 @@
+import {useEffect,useRef,useState} from 'react';
+import L from 'leaflet';import 'leaflet/dist/leaflet.css';
+import type {Result} from './domain';
+export default function MapPanel({rows,onSelect}:{rows:Result[];onSelect:(r:Result)=>void}){
+ const el=useRef<HTMLDivElement>(null),map=useRef<L.Map|null>(null),group=useRef<L.LayerGroup|null>(null);const [failed,setFailed]=useState(false);
+ useEffect(()=>{if(!el.current)return;const m=L.map(el.current,{scrollWheelZoom:false}).setView([-33.436,-70.625],12);map.current=m;group.current=L.layerGroup().addTo(m);
+ fetch(new URL('data/map-config.json',document.baseURI)).then(r=>{if(!r.ok)throw Error();return r.json();}).then(config=>{if(config.tileUrl!=='https://tile.openstreetmap.org/{z}/{x}/{y}.png')throw Error();const tile=L.tileLayer(config.tileUrl,{maxZoom:18,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · ODbL',updateWhenIdle:true,keepBuffer:1});tile.on('tileerror',()=>setFailed(true));tile.addTo(m);}).catch(()=>setFailed(true));
+ return()=>{m.remove();map.current=null;};},[]);
+ useEffect(()=>{if(!map.current||!group.current)return;group.current.clearLayers();const grouped=new Map<string,{lat:number;lon:number;rows:Result[]}>();for(const r of rows)for(const s of r.sites){if(!s.location)continue;const key=s.id;const existing=grouped.get(key);if(existing){if(!existing.rows.some(x=>x.id===r.id))existing.rows.push(r);}else grouped.set(key,{lat:s.location.lat,lon:s.location.lon,rows:[r]});}
+ for(const [id,place]of grouped){const popup=document.createElement('div');for(const row of place.rows){const b=document.createElement('button');b.textContent='Ver ficha: '+row.name;b.className='map-popup-button';b.onclick=()=>onSelect(row);popup.appendChild(b);}const marker=L.marker([place.lat,place.lon],{title:place.rows.map(r=>r.name).join(', '),alt:'Sede de atención. Ubicación aproximada.',icon:L.divIcon({className:'custom-marker',html:'<span aria-hidden="true">+</span>',iconSize:[30,34],iconAnchor:[15,32]})}).bindPopup(popup);marker.addTo(group.current!).on('click',()=>{if(place.rows.length===1)onSelect(place.rows[0]);});}
+ const points=[...grouped.values()].map(p=>L.latLng(p.lat,p.lon));if(points.length)map.current.fitBounds(L.latLngBounds(points),{padding:[35,35],maxZoom:14});
+ },[rows,onSelect]);
+ return <div className="map-shell"><div ref={el} className="map-canvas" aria-label="Mapa de sedes de los resultados"/>{failed&&<div className="map-warning" role="status">El fondo del mapa no está disponible. Los marcadores y la lista siguen activos.</div>}<div className="map-legend"><span className="legend-dot"/>Sedes · ubicación aproximada</div><a className="map-issue" href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noopener">Informar un error del mapa</a></div>;
+}

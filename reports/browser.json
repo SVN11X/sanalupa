@@ -1,0 +1,287 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/13453fbe54ee/salud-cerca-santiago/node_modules/.bin/playwright",
+      "test",
+      "--list"
+    ],
+    "configFile": "/workspace/scratch/13453fbe54ee/salud-cerca-santiago/playwright.config.ts",
+    "rootDir": "/workspace/scratch/13453fbe54ee/salud-cerca-santiago/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/scratch/13453fbe54ee/salud-cerca-santiago/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/scratch/13453fbe54ee/salud-cerca-santiago/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "reports/browser.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run preview -- --port 4173",
+      "url": "http://127.0.0.1:4173",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "site.spec.ts",
+      "file": "site.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "real catalogue, responsive layout and accessible forms at 360",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-178982ddf0db95d98ce2",
+          "file": "site.spec.ts",
+          "line": 5,
+          "column": 35
+        },
+        {
+          "title": "real catalogue, responsive layout and accessible forms at 768",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-cd8225243fe10ed496ef",
+          "file": "site.spec.ts",
+          "line": 5,
+          "column": 35
+        },
+        {
+          "title": "real catalogue, responsive layout and accessible forms at 1280",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-891eba4ef9ed72fffd83",
+          "file": "site.spec.ts",
+          "line": 5,
+          "column": 35
+        },
+        {
+          "title": "search, detail and return preserve filters; favorites survive reload and can be deleted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-6fa64dc9b08e4fa59c1c",
+          "file": "site.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "compare up to three centers and refuse fourth",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-6776fa40cfb17aa61888",
+          "file": "site.spec.ts",
+          "line": 10,
+          "column": 1
+        },
+        {
+          "title": "professional catalogue empty state is honest and no rating order enabled",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-85f85536b2124bafc626",
+          "file": "site.spec.ts",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "keyboard search and denied geolocation keep comuna usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-e611e5f60a9c1fbb6680",
+          "file": "site.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "map markers match all filtered sites, activate same ficha without downloading real tiles",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-a49170dc8a9d5e930725",
+          "file": "site.spec.ts",
+          "line": 13,
+          "column": 1
+        },
+        {
+          "title": "local synthetic professional fixture exercises verified credentials, comparison and authorized opinions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-39afcba3f1f78738b8ef",
+          "file": "site.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "catalogue loading failure has retry and no invented results",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5c02723ad68c2a0d50c5-48b9a5b9d8e9cef322fe",
+          "file": "site.spec.ts",
+          "line": 15,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-07T17:50:45.819Z",
+    "duration": 63.13799999999998,
+    "expected": 0,
+    "skipped": 10,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

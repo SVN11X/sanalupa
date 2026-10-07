@@ -1,0 +1,7 @@
+{
+  "reviewedAt":"2026-10-07",
+  "checks":[
+    {"id":"osm:way:307633936","osmWebsite":"https://calvomackenna.cl/","checkedReference":"https://www.calvomackenna.cl/servicios/indice_telefonico","matched":"Nombre y dirección profesional coinciden: Hospital Calvo Mackenna, Antonio Varas 360. Comprobado mediante fuente institucional indexada; acceso HTTP directo devolvió 502. No se extrajo contenido."},
+    {"id":"osm:way:297288268","osmWebsite":"https://www.sanasalud.cl/","checkedReference":"https://sanasalud.cl/red-de-centros/","matched":"Nombre y dirección profesional coinciden: Sanasalud, Pedro de Valdivia 195. Comprobado mediante fuente institucional indexada; carga directa no disponible en este entorno. No se extrajo contenido."}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "startedAt": "2026-10-07T17:52:08.292Z",
+  "mode": "overpass",
+  "status": "failed",
+  "previousRetained": true,
+  "publishedAt": "2026-10-07",
+  "reason": "provider_disabled_pending_policy_review"
+}
