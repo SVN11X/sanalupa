@@ -29,9 +29,9 @@
       "mayPublish": false,
       "mayRetain": false,
       "mayDerive": false,
-      "reviewedAt": "2026-10-07",
+      "reviewedAt": "2026-10-08",
       "attribution": "Enlace externo; sin respaldo institucional",
-      "notes": "Consulta manual gratuita. API exige solicitud formal; importación desactivada."
+      "notes": "Única fuente válida para afirmar habilitación. Consulta manual gratuita. La API exige solicitud formal; sin ese acceso cada ficha enlaza a la verificación y la credencial queda pendiente. No se consulta por RUT."
     },
     {
       "id": "doctoralia",
@@ -44,9 +44,54 @@
       "mayPublish": false,
       "mayRetain": false,
       "mayDerive": false,
-      "reviewedAt": "2026-10-07",
+      "reviewedAt": "2026-10-08",
       "attribution": "Enlace externo; sin respaldo institucional",
-      "notes": "Sin autorización de agregación. Solo enlace externo."
+      "notes": "Adaptador listo. robots.txt permite listados y perfiles (08-10-2026). Falta que una persona lea las condiciones (PDF bloqueado para programas por robots.txt) antes de activar la extracción. Escala de 1 a 5."
+    },
+    {
+      "id": "topdoctors",
+      "name": "Top Doctors Chile",
+      "owner": "Top Doctors",
+      "url": "https://www.topdoctors.cl/",
+      "policyUrl": "https://www.topdoctors.cl/info/terminos-legales/",
+      "status": "pending",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-08",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "El 08-10-2026 robots.txt, sitemap, términos y perfiles no fueron legibles por programas (respuesta 404; sitio detrás de Cloudflare). Adaptador listo, desactivado. Solo enlace externo."
+    },
+    {
+      "id": "opinionmedica",
+      "name": "Opinión Médica",
+      "owner": "Opinión Médica",
+      "url": "https://opinionmedica.cl/",
+      "policyUrl": "https://opinionmedica.cl/",
+      "status": "pending",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-08",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "Bloqueó consultas automáticas por detección de bots el 07-10-2026 y otra vez el 08-10-2026 (403). No se intenta evadir el bloqueo. Solo enlace externo."
+    },
+    {
+      "id": "doctorreviews",
+      "name": "Doctor-Reviews",
+      "owner": "Doctor-Reviews",
+      "url": "https://doctor-reviews.com/",
+      "policyUrl": "https://doctor-reviews.com/",
+      "status": "discarded",
+      "license": null,
+      "mayPublish": false,
+      "mayRetain": false,
+      "mayDerive": false,
+      "reviewedAt": "2026-10-08",
+      "attribution": "Enlace externo; sin respaldo institucional",
+      "notes": "Sin cobertura en Chile (solo provincias de España) y reseñas idénticas repetidas con identificadores de ejemplo como doc_ana_ruiz. Parece un sitio de demostración. Sin adaptador."
     },
     {
       "id": "redsalud",

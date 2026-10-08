@@ -52,3 +52,15 @@ npm run test:e2e
 También se incluye el workflow manual **Comprobar navegador** para un repositorio público. Revisa la consola, red y teselas durante una visita humana; confirma contacto/dirección en la fuente. No reintroduzcas descargas de teselas por bots.
 
 La evidencia disponible demuestra compilación y lógica de datos correctas. **No demuestra todavía el flujo completo en navegador ni un catálogo real de profesionales con opiniones.**
+
+## Ejecución del 8 de octubre de 2026 (Node 22.22.0, Chromium de Playwright 1.63)
+
+| Comando | Resultado real |
+|---|---|
+| `npm run validate` | `{"valid":true,"professionals":0,"sites":18,"ratings":0,"publishedAt":"2026-10-07"}` |
+| `npm run build` | Compilación correcta (`✓ built`) |
+| `npm test` | 44 pruebas, 44 aprobadas, 0 fallidas |
+| `npm run test:e2e` | 15 aprobadas (incluye axe a 360, 768 y 1280 px, catálogo FICTICIO con valoraciones, mapa de profesionales y aviso de respaldo con `index.html` sin compilar) |
+| `SCRAPE_LIMIT_LISTINGS=1 npm run scrape:ratings` | Doctoralia y Top Doctors `skipped` con motivo `terms_review_required`, 0 consultas, catálogo sin cambios |
+
+No verificado: el extractor contra las páginas reales (el entorno de mantenimiento no tiene acceso de red a esas plataformas y la revisión de términos está pendiente) ni el sitio desplegado en Pages.

@@ -1,0 +1,100 @@
+{
+  "id": "doctoralia",
+  "name": "Doctoralia Chile",
+  "owner": "Doctoralia Internet SL (grupo Docplanner)",
+  "baseUrl": "https://www.doctoralia.cl",
+  "domains": [
+    "www.doctoralia.cl"
+  ],
+  "policyUrl": "https://www.doctoralia.cl/terminos-y-condiciones",
+  "termsReviewedAt": null,
+  "termsNote": "El 08-10-2026 robots.txt permite listados y perfiles, pero el PDF de condiciones (/public/doc/...) está bloqueado para programas por el propio robots.txt y no pudo leerse automáticamente. Una persona debe leerlo y, si permite este uso, escribir aquí la fecha de revisión (AAAA-MM-DD). Mientras sea null, el ejecutor no consulta el sitio.",
+  "discovery": "listings",
+  "listingPattern": "/{specialty}/{commune}",
+  "specialties": [
+    {
+      "slug": "cardiologo",
+      "name": "Cardiología",
+      "profession": "Médico"
+    },
+    {
+      "slug": "pediatra",
+      "name": "Pediatría",
+      "profession": "Médico"
+    },
+    {
+      "slug": "traumatologo",
+      "name": "Traumatología",
+      "profession": "Médico"
+    },
+    {
+      "slug": "dermatologo",
+      "name": "Dermatología",
+      "profession": "Médico"
+    },
+    {
+      "slug": "ginecologo",
+      "name": "Ginecología y obstetricia",
+      "profession": "Médico"
+    },
+    {
+      "slug": "neurologo",
+      "name": "Neurología",
+      "profession": "Médico"
+    },
+    {
+      "slug": "oftalmologo",
+      "name": "Oftalmología",
+      "profession": "Médico"
+    },
+    {
+      "slug": "psiquiatra",
+      "name": "Psiquiatría",
+      "profession": "Médico"
+    },
+    {
+      "slug": "urologo",
+      "name": "Urología",
+      "profession": "Médico"
+    },
+    {
+      "slug": "medico-general",
+      "name": "Medicina general",
+      "profession": "Médico"
+    },
+    {
+      "slug": "endocrinologo",
+      "name": "Endocrinología",
+      "profession": "Médico"
+    },
+    {
+      "slug": "gastroenterologo",
+      "name": "Gastroenterología",
+      "profession": "Médico"
+    }
+  ],
+  "communes": [
+    "Providencia",
+    "Las Condes",
+    "Santiago",
+    "Ñuñoa",
+    "Vitacura",
+    "La Florida",
+    "Maipú",
+    "Puente Alto",
+    "San Miguel",
+    "Independencia",
+    "Lo Barnechea",
+    "La Reina",
+    "Estación Central"
+  ],
+  "maxPagesPerListing": 2,
+  "maxProfilesPerListing": 15,
+  "minIntervalMs": 2500,
+  "maxRequests": 700,
+  "timeoutMs": 20000,
+  "maxBytes": 3000000,
+  "retentionDays": 45,
+  "rotate": true,
+  "publishNotes": "Se guardan solo datos agregados: nombre, especialidad anunciada, dirección y comuna de consulta, coordenadas, promedio, cantidad de opiniones, escala (1 a 5), fecha de consulta y URL del perfil. No se copian textos de opiniones ni datos de pacientes. No se guarda el campo de colegiatura."
+}

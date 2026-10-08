@@ -1,0 +1,31 @@
+{
+  "id": "topdoctors",
+  "name": "Top Doctors Chile",
+  "owner": "Top Doctors",
+  "baseUrl": "https://www.topdoctors.cl",
+  "domains": [
+    "www.topdoctors.cl"
+  ],
+  "policyUrl": "https://www.topdoctors.cl/info/terminos-legales/",
+  "termsReviewedAt": null,
+  "termsNote": "El 08-10-2026 robots.txt, sitemap, términos (/info/terminos-legales/) y perfiles respondieron 404 a lectores automáticos (sitio detrás de Cloudflare). No se pudo confirmar ni robots.txt ni términos. Fuente pendiente.",
+  "discovery": "sitemap",
+  "listingPattern": "",
+  "specialties": [
+    {
+      "slug": "cardiologia",
+      "name": "Cardiología",
+      "profession": "Médico"
+    }
+  ],
+  "communes": [],
+  "maxPagesPerListing": 1,
+  "maxProfilesPerListing": 15,
+  "minIntervalMs": 2500,
+  "maxRequests": 700,
+  "timeoutMs": 20000,
+  "maxBytes": 3000000,
+  "retentionDays": 45,
+  "rotate": false,
+  "publishNotes": "Se guardarían solo datos agregados: nombre, especialidad, consulta, promedio, cantidad de opiniones, escala, fecha y URL del perfil."
+}

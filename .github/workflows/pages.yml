@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  pages: read
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -20,6 +21,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Comprobar que Pages está en modo GitHub Actions
+        # Falla con un mensaje claro si Settings > Pages > Source no es "GitHub Actions".
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Exigir Source = GitHub Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mode=$(gh api "repos/${{ github.repository }}/pages" --jq .build_type || echo desconocido)
+          if [ "$mode" != "workflow" ]; then
+            echo "::error title=Pages mal configurado::Pages publica en modo '$mode'. Ve a Settings > Pages > Source y elige 'GitHub Actions'. Si no, el sitio mostrará el código sin compilar (página en blanco)."
+            exit 1
+          fi
       - run: npm ci --no-fund --no-audit
       - run: npm run validate
       - run: npm run build

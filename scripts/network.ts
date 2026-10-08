@@ -1,6 +1,7 @@
 import {lookup} from 'node:dns/promises';
 import {isIP} from 'node:net';
-export type FetchPolicy={domains:string[];maxRequests:number;minIntervalMs:number;timeoutMs:number;retries:number;maxBytes:number;userAgent:string};
+// accept: tipo de contenido pedido (por defecto JSON, para OSM). maxRedirects: redirecciones permitidas, solo dentro de los dominios autorizados (por defecto 0).
+export type FetchPolicy={domains:string[];maxRequests:number;minIntervalMs:number;timeoutMs:number;retries:number;maxBytes:number;userAgent:string;accept?:string;maxRedirects?:number};
 export class ProviderError extends Error{constructor(public reason:string){super(reason);}}
 export function privateIP(ip:string){
  if(isIP(ip)===6)return !/^[23][0-9a-f]{3}:/i.test(ip); // IPv6 global unicast only; reject mapped, loopback, ULA, link local.
@@ -12,12 +13,23 @@ export async function guardDestination(raw:string,domains:string[],resolver=look
 }
 export function createFetcher(p:FetchPolicy,deps:{fetch?:typeof fetch;wait?:(ms:number)=>Promise<void>;guard?:typeof guardDestination}={}){
  let requests=0,last=0,suspended:string|null=null;const call=deps.fetch??fetch,wait=deps.wait??(ms=>new Promise(r=>setTimeout(r,ms))),guard=deps.guard??guardDestination;
- return async(raw:string,init:RequestInit={})=>{
+ const get=async(raw:string,init:RequestInit={})=>{
   if(suspended)throw new ProviderError(suspended);await guard(raw,p.domains);
   for(let attempt=0;attempt<=p.retries;attempt++){
    if(requests>=p.maxRequests)throw new ProviderError('quota_exhausted');const delay=p.minIntervalMs-(Date.now()-last);if(delay>0)await wait(delay);
    requests++;last=Date.now();let response:Response;
-   try {response=await call(raw,{...init,redirect:'error',signal:AbortSignal.timeout(p.timeoutMs),headers:{...init.headers,'User-Agent':p.userAgent,Accept:'application/json'}});}catch{if(attempt<p.retries){await wait(1500);continue;}suspended='network_or_timeout';throw new ProviderError(suspended);}
+   const maxRedirects=p.maxRedirects??0;
+   try {
+    let target=raw;
+    for(let hop=0;;hop++){
+     response=await call(target,{...init,redirect:maxRedirects?'manual':'error',signal:AbortSignal.timeout(p.timeoutMs),headers:{...init.headers,'User-Agent':p.userAgent,Accept:p.accept??'application/json','Accept-Language':'es-CL,es;q=0.9'}});
+     if(!maxRedirects||response.status<300||response.status>=400||!response.headers.get('location'))break;
+     if(hop>=maxRedirects)throw new ProviderError('too_many_redirects');
+     const next=new URL(response.headers.get('location')!,target).toString();await response.body?.cancel();
+     await guard(next,p.domains); // una redirección fuera de los dominios autorizados se rechaza
+     if(requests>=p.maxRequests)throw new ProviderError('quota_exhausted');const d=p.minIntervalMs-(Date.now()-last);if(d>0)await wait(d);requests++;last=Date.now();target=next;
+    }
+   }catch(e){if(e instanceof ProviderError)throw e;if(attempt<p.retries){await wait(1500);continue;}suspended='network_or_timeout';throw new ProviderError(suspended);}
    if([401,403,406].includes(response.status)){suspended='access_denied';throw new ProviderError(suspended);}
    if(response.status===429){
     // Suspend this run. Honor Retry-After by making no further request; no endpoint rotation.
@@ -31,4 +43,5 @@ export function createFetcher(p:FetchPolicy,deps:{fetch?:typeof fetch;wait?:(ms:
    const bytes=new Uint8Array(size);let pos=0;for(const b of chunks){bytes.set(b,pos);pos+=b.length;}return new TextDecoder().decode(bytes);
   }throw new ProviderError('retry_exhausted');
  };
+ return Object.assign(get,{stats:()=>({requests,suspended})});
 }

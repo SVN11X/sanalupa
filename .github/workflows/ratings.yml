@@ -1,0 +1,77 @@
+name: Actualizar valoraciones
+on:
+  workflow_dispatch:
+    inputs:
+      sources:
+        description: 'Fuentes separadas por coma'
+        default: 'doctoralia,topdoctors'
+      limit_listings:
+        description: 'Máximo de listados por fuente (vacío = configuración)'
+        default: ''
+  schedule:
+    - cron: '41 6 * * 3' # semanal, miércoles 06:41 UTC
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: ratings-update
+  cancel-in-progress: false
+jobs:
+  ratings:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --no-fund --no-audit
+      - run: npm run build
+      - run: npm test
+      - name: Extraer valoraciones (respeta robots.txt, 1 consulta cada 2,5 s, tope 700)
+        env:
+          SCRAPE_SOURCES: ${{ inputs.sources || 'doctoralia,topdoctors' }}
+          SCRAPE_LIMIT_LISTINGS: ${{ inputs.limit_listings }}
+        run: npm run scrape:ratings
+      - name: Validar catálogo
+        run: npm run validate
+      - name: Guardar catálogo solo si cambió
+        id: commit
+        run: |
+          if git diff --quiet -- public/data/catalog.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "El catálogo no cambió."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/data/catalog.json
+            git commit -m "datos: actualizar valoraciones agregadas"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Volver a publicar Pages
+        # Los commits hechos con GITHUB_TOKEN no disparan otros workflows; por eso se lanza a mano.
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
+      - name: Resumen
+        if: always()
+        run: |
+          {
+            echo "## Valoraciones"
+            if [ -f reports/ratings.json ]; then
+              node -e 'const r=require("./reports/ratings.json");console.log("Catálogo modificado: "+(r.catalogChanged?"sí":"no")+"\n");console.log("| Fuente | Estado | Motivo | Consultas | Perfiles leídos | Con opiniones | Bloqueados por robots |");console.log("|---|---|---|---|---|---|---|");for(const s of r.sources)console.log(`| ${s.source} | ${s.status} | ${s.reason??""} | ${s.requests} | ${s.profilesFetched} | ${s.withRatings} | ${s.robotsBlocked} |`);'
+            else
+              echo "No se generó reports/ratings.json."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Subir informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informes-valoraciones
+          path: reports/
+          retention-days: 7
+          if-no-files-found: warn

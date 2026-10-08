@@ -34,7 +34,10 @@ try{
   const candidate={...old,sites:[...retainedSites,...parts.sites],organizations:[...retainedOrg,...parts.organizations],publishedAt:checkedAt};assertPublishable(candidate);const next=await atomicPublish(path,candidate,old);
   report={...report,status:'published',processed:next.sites.length,...changes(old,next)};
  }
-}catch(e){const allowed=mayKeepPrevious(old);if(!allowed){await atomicPublish(path,{...old,professionals:[],organizations:[],sites:[],ratings:[],publishedAt:new Date().toISOString()},null);}
- report={...report,status:'failed',previousRetained:allowed,publishedAt:old.publishedAt,reason:e instanceof ProviderError?e.reason:'validation_or_publication_failed'};process.exitCode=1;
+}catch(e){
+ // Un fallo NUNCA publica un catálogo vacío: se conserva el anterior tal cual y se informa el error.
+ // Si alguna fuente usada no permite retener datos, se avisa para revisión manual en vez de borrar el sitio.
+ const allowed=mayKeepPrevious(old);
+ report={...report,status:'failed',previousRetained:true,retentionReviewRequired:!allowed,publishedAt:old.publishedAt,reason:e instanceof ProviderError?e.reason:'validation_or_publication_failed'};process.exitCode=1;
 }
 await mkdir('reports',{recursive:true});await writeFile('reports/update.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

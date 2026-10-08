@@ -2,21 +2,17 @@
 
 Aplicación estática React + TypeScript para buscar atención de salud con evidencia visible, fichas, comparación, favoritos locales y mapa Leaflet. Compatible con GitHub Pages y sin backend permanente, claves privadas ni servicios de pago obligatorios.
 
-**Estado real de esta entrega:** 18 centros cartografiados, 0 profesionales individuales y 0 valoraciones importadas. La búsqueda de centros es utilizable. La arquitectura y la interfaz de profesionales están implementadas y probadas con fixtures aislados, pero el objetivo de un directorio de médicos con opiniones **requiere obtener una fuente autorizada**. Los centros no se presentan como médicos. La licencia abierta de OSM no equivale a validación clínica ni confirmación de atención actual.
+**Estado real (8-10-2026):** 18 centros cartografiados, 0 profesionales y 0 valoraciones publicadas. El extractor de valoraciones de Doctoralia y Top Doctors está implementado y probado con páginas simuladas, pero **no se activa hasta que una persona revise los términos de uso** de cada plataforma (ver `FUENTES.md` y `docs/AMPLIAR.md`). Los centros no se presentan como médicos. La licencia abierta de OSM no equivale a validación clínica ni confirmación de atención actual.
 
-## Usar los archivos ya compilados
+## Publicar en GitHub Pages
 
-La carpeta `dist/` está lista para servir por HTTP(S). No hace falta instalar nada para visitar la página. Abrir `dist/index.html` con doble clic (`file://`) no es una ejecución compatible: el navegador bloqueará algunas cargas de módulos o JSON.
+El repositorio **no** incluye una carpeta `dist/` compilada (está en `.gitignore`). El sitio se compila en GitHub Actions. Si Pages publica la rama directamente («Deploy from a branch»), el navegador recibe el código sin compilar y la página queda en blanco; ahora aparece un aviso «La página no pudo cargar» con instrucciones.
 
-Para un repositorio público de GitHub:
+1. En **Settings → Pages → Build and deployment → Source**, selecciona **GitHub Actions**.
+2. Ejecuta el workflow **Validar y publicar Pages** o haz un commit a `main`. El workflow comprueba primero que Pages esté en modo GitHub Actions y falla con un mensaje claro si no lo está.
+3. La dirección resultante usa la ruta de tu repositorio.
 
-1. Sube el contenido de este proyecto a un repositorio nuevo, por ejemplo `salud-cerca-santiago`, con rama `main`. Incluye `.github/workflows/`.
-2. En **Settings → Pages → Build and deployment → Source**, selecciona **GitHub Actions**.
-3. Ejecuta **Validar y publicar Pages** o realiza un commit a `main`. GitHub compilará, validará y publicará. La dirección resultante utiliza la ruta de tu repositorio.
-
-Alternativa sin compilación: sube solo el contenido de `dist/` a un repositorio público y configura Pages para publicar desde la raíz de esa rama. Incluye `.nojekyll`. En ese caso no tendrás los workflows ni el código fuente en ese repositorio.
-
-No se ha publicado nada en cuentas externas. El ZIP contiene una compilación local comprobada, no un despliegue existente.
+Para servir el sitio por tu cuenta: `npm ci && npm run build` y publica el contenido de `dist/` (incluye `.nojekyll`). Abrir `dist/index.html` con doble clic (`file://`) no funciona: el navegador bloquea la carga de módulos y JSON.
 
 ## Desarrollo (para quien administra el proyecto)
 
@@ -41,9 +37,21 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-`npm test` cubre normalización, homónimos, entidad valorada, fórmula bayesiana, búsqueda, coordenadas ausentes, permisos de datos, 403/429/timeout/cuotas y publicación atómica. Dos pruebas revisan además el `dist/` existente: compila antes de ejecutarlas.
+`npm test` cubre el lector de robots.txt, los adaptadores de valoraciones (con páginas simuladas FICTICIAS), la fusión por fuente, normalización, homónimos, entidad valorada, fórmula bayesiana, búsqueda, coordenadas ausentes, permisos de datos, 403/429/timeout/cuotas y publicación atómica. Dos pruebas revisan además el `dist/` existente: compila antes de ejecutarlas.
 
 Las pruebas Playwright incluyen 360, 768 y 1280 px, accesibilidad con axe, fichas, regreso con filtros, favoritos, comparación, geolocalización denegada y mapa. Bloquean las teselas reales para no generar descargas de mapas por bots. `QA_URL` permite usar un servidor ya disponible; `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` permite indicar Chromium instalado. El workflow **Comprobar navegador** es manual. Véase `VALIDACION.md`: estas pruebas visuales no pudieron ejecutarse en el entorno de entrega.
+
+## Valoraciones de médicos
+
+```bash
+npm run scrape:ratings                                   # todas las fuentes configuradas
+SCRAPE_SOURCES=doctoralia SCRAPE_LIMIT_LISTINGS=1 npm run scrape:ratings   # prueba corta
+```
+
+- Configuración por fuente en `scripts/doctoralia.json` y `scripts/topdoctors.json` (especialidades, comunas, páginas, perfiles por listado, pausa, cuota y días de retención).
+- Respeta robots.txt (lector propio en `scripts/robots.ts`), una consulta cada 2,5 s por dominio como mínimo, tope de 700 consultas por ejecución, se detiene ante 429 o 403. No usa proxies, CAPTCHA ni navegadores automatizados.
+- Si no obtiene ninguna valoración, no toca el catálogo y deja muestras en `reports/` (`reports/ratings.json` explica el motivo).
+- El workflow **Actualizar valoraciones** (`.github/workflows/ratings.yml`) corre cada semana y a pedido, guarda el catálogo solo si cambió y vuelve a lanzar la publicación de Pages.
 
 ## Actualización y ampliación
 
@@ -74,7 +82,7 @@ El workflow semanal genera una propuesta revisable cuando existe un proveedor ha
 - Favoritos: solo IDs en localStorage, con eliminación desde Privacidad. La comparación y la geolocalización son temporales.
 - Distancia en línea recta, local. El mapa no se centra en la ubicación del visitante ni la envía a proveedores.
 - Contactos: dos sitios web identificados en OSM y cotejados con fuentes institucionales indexadas. Su carga HTTP directa no pudo comprobarse. Sin agenda en tiempo real, precios ni convenios inferidos.
-- Las valoraciones están desactivadas mientras no haya permisos y datos comparables suficientes. No se copian opiniones de pacientes.
+- Valoraciones: promedio y cantidad de opiniones por fuente, con su escala propia. Nunca se mezclan fuentes en un solo número. El orden «Mejor valorados» ajusta por cantidad de opiniones dentro de la misma fuente y especialidad. No se copian textos de opiniones.
 - Reportes: borrador descargable y vínculo para corregir OSM. No hay correo de recepción inventado ni envío automático.
 
 ## Documentación
@@ -91,4 +99,4 @@ El workflow semanal genera una propuesta revisable cuando existe un proveedor ha
 
 Código: MIT (`LICENSE`). Datos OSM y base derivada: ODbL 1.0 (`DATA-LICENSE.md`). Mantén ambas atribuciones al redistribuir el ZIP o el catálogo. El extracto mínimo conserva procedencia sin publicar los usuarios de OSM ni sus metadatos personales. La página Privacidad describe localStorage, geolocalización y solicitudes de mapas. La revisión normativa no constituye una declaración de cumplimiento legal completo.
 
-Empaquetado opcional para mantenedores: `npm run package` usa Python 3 y genera un ZIP junto al proyecto. No es necesario para usar o publicar el `dist/` incluido.
+Empaquetado opcional para mantenedores: `npm run package` usa Python 3 y genera un ZIP junto al proyecto. No es necesario para publicar el sitio.

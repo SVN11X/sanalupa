@@ -6,7 +6,7 @@ Fecha: 07-10-2026.
 |---|---|---|
 | Catálogo real | 18 centros OSM con procedencia y licencia; 16 en Providencia, 1 en Santiago, 1 en Recoleta | Sin cobertura completa de las 37 comunas |
 | Profesionales individuales | Esquema, búsqueda, fichas, comparación y estados de credenciales | **0 perfiles reales publicados**: faltan acceso/permiso e identidad comprobada. No se reemplazan con centros o nombres inventados |
-| Valoraciones | Modelo por entidad/fuente, fórmula y casos límite probados, UI para datos autorizados | **0 valoraciones reales**; no existe agregación operativa de Doctoralia/Google. Orden por opiniones desactivado |
+| Valoraciones | Adaptadores Doctoralia y Top Doctors, ejecutor semanal, estrellas por fuente, orden «Mejor valorados» con ajuste por volumen | **0 valoraciones reales** publicadas: la extracción espera la revisión humana de términos de cada plataforma. Opinión Médica bloquea bots; Doctor-Reviews descartada |
 | Credenciales | Procedimiento manual, validación de evidencia y enlace RNPI | No se verificó ningún profesional; API oficial pendiente de solicitud y elegibilidad |
 | Contacto | Dos sitios web cotejados con fuentes institucionales indexadas | Carga HTTP directa no comprobada. Resto: vínculo a fuente original y directorios; sin agendas ni disponibilidad real |
 | Precio / convenios | Campos tipados y presentación CLP | Todos desconocidos; sin filtros que aparenten datos ausentes |
@@ -30,4 +30,4 @@ Acceso a API RNPI y permiso de uso/publicación aplicable; autorización de Doct
 
 Se consultaron [Ley 19.628](https://www.bcn.cl/leychile/Navegar?dt=open&idLey=19628) y [Ley 21.719](https://www.bcn.cl/leychile/Navegar?idNorma=1209272). A la fecha de revisión, la primera rige y la segunda tiene vigencia diferida al 1 de diciembre de 2026. No se declara cumplimiento integral; publicar perfiles personales o recibir información añade obligaciones que deben revisarse. El proyecto no diagnostica ni ofrece atención de urgencia.
 
-El objetivo completo de comparar médicos por valoraciones reales **todavía no está alcanzado**. Esta entrega es la base funcional con centros permitidos y funciones de profesionales preparadas; habilitar el catálogo personal depende de datos autorizados.
+El objetivo de comparar médicos por valoraciones reales **depende de un paso humano**: revisar los términos de Doctoralia (PDF bloqueado para programas) y registrar la fecha en `scripts/doctoralia.json`. El extractor no se ha ejecutado contra los sitios reales; la estructura de sus páginas puede diferir de la simulada en las pruebas.

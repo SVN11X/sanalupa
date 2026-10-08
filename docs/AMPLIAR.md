@@ -33,7 +33,7 @@ npm test
 
 La interfaz mostrará automáticamente las profesiones/especialidades disponibles, fichas y sedes múltiples. El orden por opiniones se habilita solo cuando hay una fuente con permiso de derivación. La selección de la fuente evita mezclar plataformas. No se necesita un backend o IA remota.
 
-No hay adaptadores activos para Doctoralia, RedSalud, UC CHRISTUS, Google, Apify u Outscraper. Su configuración deja el motivo explícito. No hay extractores HTML con selectores especulativos: Cheerio/Playwright para proveedores se añadirían únicamente después de obtener acceso/reutilización autorizados.
+Hay adaptadores para Doctoralia y Top Doctors (ver la sección siguiente). No hay adaptadores para RedSalud, UC CHRISTUS, Opinión Médica, Google, Apify u Outscraper.
 
 ## Retiro y correcciones
 
@@ -44,3 +44,46 @@ No hay adaptadores activos para Doctoralia, RedSalud, UC CHRISTUS, Google, Apify
 - Antes de un commit, ejecutar validación/build/pruebas y revisar `git diff`. Si no existe permiso de retención, no mantener datos vencidos en una versión pública ni en artefactos.
 
 Los reportes de usuarios son archivos locales que no se envían automáticamente. Configura un canal real de recepción antes de ofrecer envío; no se incluye uno inventado.
+
+## Valoraciones de Doctoralia y Top Doctors
+
+### Antes de la primera ejecución: revisar los términos
+
+El extractor no consulta ninguna plataforma mientras `termsReviewedAt` sea `null` en `scripts/{fuente}.json`. El 08-10-2026 no fue posible leer los términos de forma automática (Doctoralia los publica en un PDF que su propio robots.txt prohíbe a programas; Top Doctors respondió 404). Una persona debe:
+
+1. Abrir los términos en el navegador: Doctoralia en <https://www.doctoralia.cl/terminos-y-condiciones> (enlace al PDF «Condiciones generales»); Top Doctors en <https://www.topdoctors.cl/info/terminos-legales/>.
+2. Buscar cláusulas sobre extracción automática, copia o reutilización de contenidos y bases de datos.
+3. Si los términos **no** lo prohíben, escribir la fecha de revisión (`"termsReviewedAt": "AAAA-MM-DD"`) y resumir la conclusión en `termsNote` y en `FUENTES.md`. Si lo prohíben, dejar `null` y pedir autorización a la plataforma.
+
+La revisión vence a los 365 días.
+
+### Ejecutar localmente desde Chile
+
+Si la plataforma bloquea los servidores de GitHub (403 o 429 en `reports/ratings.json`), puedes ejecutarlo desde tu computador. Usa la misma configuración; no cambies el user-agent ni uses VPN o proxies para disfrazar el origen.
+
+```bash
+git pull
+npm ci
+SCRAPE_SOURCES=doctoralia SCRAPE_LIMIT_LISTINGS=2 npm run scrape:ratings   # prueba corta (unos minutos)
+cat reports/ratings.json                                                   # revisa estado y motivo
+npm run scrape:ratings                                                     # ejecución completa (hasta 700 consultas, ~30 min)
+npm run validate && npm run build && npm test
+git add public/data/catalog.json
+git commit -m "datos: actualizar valoraciones agregadas"
+git push
+```
+
+El push a `main` dispara el workflow de Pages, que valida y publica. Si un 403 aparece también desde Chile, la plataforma no permite este acceso: no reintentes; marca la fuente como pendiente.
+
+### Qué hace una ejecución
+
+1. Lee robots.txt y descarta toda ruta prohibida (gana la regla más larga; los comodines `*` y `$` se respetan).
+2. Recorre los listados `/{especialidad}/{comuna}` configurados (rotando el punto de partida cada semana), hasta `maxPagesPerListing` páginas y `maxProfilesPerListing` perfiles por listado.
+3. Lee cada perfil y extrae, en este orden: JSON-LD `aggregateRating`, microdatos `itemprop`, atributos `data-score` y el texto «N opiniones».
+4. Si no obtiene ninguna valoración, no modifica el catálogo y guarda hasta 3 páginas de muestra (con RUT borrados) en `reports/` para revisar si cambió la estructura.
+5. Si obtiene datos: reemplaza los registros renovados de esa fuente, conserva los no visitados consultados hace 45 días o menos, borra los más antiguos y no toca otras fuentes. La fuente queda `enabled` con licencia «Términos de uso de {plataforma} (no es una licencia abierta)».
+6. Un 403 suspende la fuente y deja el catálogo intacto. Un 429 respeta `Retry-After` y detiene la fuente en esa ejecución.
+
+### Identificadores
+
+`doctoralia:{slug}` (profesional), `doctoralia:site:{hash}` (consulta, tipo `practice`), `org:doctoralia:{hash}` (centro) y `doctoralia:rating:{slug}` (valoración). Las consultas no aparecen en la pestaña «Centros». Dos fichas de plataformas distintas se muestran juntas solo si coinciden nombre con ambos apellidos, profesión, especialidad y una dirección (calle y número), o un número de registro oficial del RNPI con evidencia oficial.

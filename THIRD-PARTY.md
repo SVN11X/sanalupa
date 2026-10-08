@@ -12,6 +12,7 @@ Versiones instaladas el 07-10-2026, con lockfile. Librerías incluidas localment
 | lucide-react | 0.577.0 | ISC |
 | scheduler | 0.28.0 | MIT |
 | vite | 8.3.3 | MIT |
+| cheerio (solo scripts de mantenimiento, no va en el sitio) | 1.2.0 | MIT |
 
 Los textos de licencia incluidos en `docs/licenses/` deben conservarse con la redistribución. Fuse.js 7.5.0 usa Apache-2.0; no se atribuye una licencia MIT por memoria de versiones anteriores. Leaflet usa BSD-2-Clause. Los datos OSM usan ODbL de forma independiente.
 
