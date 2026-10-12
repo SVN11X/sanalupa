@@ -13,7 +13,8 @@ jobs:
   build:
     if: github.event.repository.private == false
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Con decenas de miles de fichas de profesionales, validar y empaquetar toma más que antes.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:

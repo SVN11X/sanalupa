@@ -15,7 +15,8 @@ import * as doctoralia from './adapters/doctoralia';
 import * as topdoctors from './adapters/topdoctors';
 import {mergeSource, type SourceEntry} from './ratings-merge';
 import {atomicPublish} from './publish';
-import {assertPublishable} from './publication-policy';
+import {assertPublishable, assertIndexPublishable} from './publication-policy';
+import {runDoctoralia, type CrawlReport, type DoctoraliaConfig} from './doctoralia-crawl';
 
 export const USER_AGENT = 'SaludCercaSantiago/1.0 (+https://github.com/SVN11X/sanalupa; agregados de valoraciones; una consulta cada 2,5 s)';
 
@@ -241,10 +242,32 @@ export async function loadConfigs(ids: string[]): Promise<SourceConfig[]> {
   return Promise.all(ids.map(async id => JSON.parse(await readFile(`scripts/${id}.json`, 'utf8')) as SourceConfig));
 }
 
+/** Resume el informe del recorrido completo de Doctoralia en el formato común de ratings.json. */
+export function summarizeCrawl(r: CrawlReport): SourceReport {
+  return {
+    source: 'doctoralia', status: r.status, reason: r.reason ?? (r.stoppedBy && r.stoppedBy !== 'done' ? 'stopped_by_' + r.stoppedBy : null),
+    requests: r.requests, listings: r.sitemaps.read, profilesFound: r.sitemaps.profiles, profilesFetched: r.fetched, robotsBlocked: r.robotsBlocked,
+    unparsed: r.errors, withRatings: r.withRatings, professionals: r.indexRows, ratings: r.withRatings, samples: r.samples,
+  };
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const ids = (process.env.SCRAPE_SOURCES || 'doctoralia,topdoctors').split(',').map(s => s.trim()).filter(s => /^[a-z0-9-]+$/.test(s));
   const limit = process.env.SCRAPE_LIMIT_LISTINGS ? Math.max(0, Number(process.env.SCRAPE_LIMIT_LISTINGS) | 0) : undefined;
   const maxRequests = process.env.SCRAPE_MAX_REQUESTS ? Math.max(1, Number(process.env.SCRAPE_MAX_REQUESTS) | 0) : undefined;
-  const report = await runRatings({configs: await loadConfigs(ids), catalogPath: 'public/data/catalog.json', reportsDir: 'reports', limitListings: limit, maxRequests, deps: {log: m => console.error(m)}});
+  const maxMinutes = process.env.SCRAPE_MAX_MINUTES ? Math.max(1, Number(process.env.SCRAPE_MAX_MINUTES)) : undefined;
+  const limitProfiles = process.env.SCRAPE_LIMIT_PROFILES ? Math.max(1, Number(process.env.SCRAPE_LIMIT_PROFILES) | 0) : undefined;
+  const raw = await Promise.all(ids.map(async id => JSON.parse(await readFile(`scripts/${id}.json`, 'utf8')) as {mode?: string}));
+  const full = raw.filter(c => c.mode === 'full') as unknown as DoctoraliaConfig[];
+  const listing = raw.filter(c => c.mode !== 'full') as unknown as SourceConfig[];
+  const crawls: SourceReport[] = [];
+  for (const cfg of full) {
+    const r = await runDoctoralia(cfg, {maxRequests, maxMinutes, limitProfiles, policy: assertIndexPublishable, deps: {log: m => console.error(m)}});
+    crawls.push(summarizeCrawl(r));
+  }
+  const report = await runRatings({configs: listing, catalogPath: 'public/data/catalog.json', reportsDir: 'reports', limitListings: limit, maxRequests, deps: {log: m => console.error(m)}});
+  report.sources = [...crawls, ...report.sources];
+  report.catalogChanged = report.catalogChanged || crawls.some(c => c.status === 'published');
+  await writeFile(join('reports', 'ratings.json'), JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(report, null, 2));
 }

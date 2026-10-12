@@ -33,7 +33,7 @@ npm test
 
 La interfaz mostrará automáticamente las profesiones/especialidades disponibles, fichas y sedes múltiples. El orden por opiniones se habilita solo cuando hay una fuente con permiso de derivación. La selección de la fuente evita mezclar plataformas. No se necesita un backend o IA remota.
 
-Hay adaptadores para Doctoralia y Top Doctors (ver la sección siguiente). No hay adaptadores para RedSalud, UC CHRISTUS, Opinión Médica, Google, Apify u Outscraper.
+Hay un recorrido completo para Doctoralia y un adaptador de agregados para Top Doctors (ver las secciones siguientes). No hay adaptadores para RedSalud, UC CHRISTUS, Opinión Médica, Google, Apify u Outscraper.
 
 ## Retiro y correcciones
 
@@ -45,45 +45,49 @@ Hay adaptadores para Doctoralia y Top Doctors (ver la sección siguiente). No ha
 
 Los reportes de usuarios son archivos locales que no se envían automáticamente. Configura un canal real de recepción antes de ofrecer envío; no se incluye uno inventado.
 
-## Valoraciones de Doctoralia y Top Doctors
+## Doctoralia: recorrido completo
 
-### Antes de la primera ejecución: revisar los términos
+### Términos de uso
 
-El extractor no consulta ninguna plataforma mientras `termsReviewedAt` sea `null` en `scripts/{fuente}.json`. El 08-10-2026 no fue posible leer los términos de forma automática (Doctoralia los publica en un PDF que su propio robots.txt prohíbe a programas; Top Doctors respondió 404). Una persona debe:
+El recorrido no consulta Doctoralia si `termsReviewedAt` en `scripts/doctoralia.json` está vacío o tiene más de 365 días. La revisión vigente es del 12-10-2026. Para renovarla, una persona abre en su navegador las condiciones (<https://www.doctoralia.cl/terminos-y-condiciones>, enlace al PDF «Condiciones generales»), confirma que siguen permitiendo este uso y actualiza la fecha y `termsNote`.
 
-1. Abrir los términos en el navegador: Doctoralia en <https://www.doctoralia.cl/terminos-y-condiciones> (enlace al PDF «Condiciones generales»); Top Doctors en <https://www.topdoctors.cl/info/terminos-legales/>.
-2. Buscar cláusulas sobre extracción automática, copia o reutilización de contenidos y bases de datos.
-3. Si los términos **no** lo prohíben, escribir la fecha de revisión (`"termsReviewedAt": "AAAA-MM-DD"`) y resumir la conclusión en `termsNote` y en `FUENTES.md`. Si lo prohíben, dejar `null` y pedir autorización a la plataforma.
+### Qué hace cada ejecución
 
-La revisión vence a los 365 días.
+1. Lee robots.txt y descarta toda ruta prohibida.
+2. Lee el índice de sitemaps (`/sitemap.xml`) y los sitemaps de perfiles. Registra los perfiles nuevos y la fecha de cambio de cada uno.
+3. Arma la cola en este orden: perfiles que cambiaron desde la última lectura (o que tienen opiniones recientes), perfiles nuevos, perfiles que desaparecieron del sitemap (para confirmar si se dieron de baja), reintentos de errores, perfiles de la RM consultados hace más de 14 días y perfiles de fuera de la RM consultados hace más de 120 días.
+4. Lee perfiles hasta agotar el tiempo (300 minutos) o la cuota (8.000 consultas). Cada 250 perfiles guarda el avance.
+5. Por cada perfil: si tiene una consulta presencial en la RM o atiende online declarando una comuna de la RM, escribe su ficha (solo si cambió) y actualiza su fila del índice. Si no, lo marca «fuera» y retira lo publicado. Un 404 lo da de baja.
+6. Al final retira las filas que llevan más de 60 días sin actualizarse y registra la fuente en `catalog.json`.
 
-### Ejecutar localmente desde Chile
+Un 403 detiene todo y un 429 respeta `Retry-After`. En ambos casos se guarda el avance y la ejecución siguiente sigue donde quedó.
 
-Si la plataforma bloquea los servidores de GitHub (403 o 429 en `reports/ratings.json`), puedes ejecutarlo desde tu computador. Usa la misma configuración; no cambies el user-agent ni uses VPN o proxies para disfrazar el origen.
+### Retiros a pedido
+
+Agrega el slug del perfil (la parte final de `https://www.doctoralia.cl/perfil/{slug}`) a `estado/doctoralia-excluidos.json`, haz commit y ejecuta el workflow. La fila y la ficha se retiran, el perfil queda «baja» en el estado y no se vuelve a consultar. La validación falla si un perfil excluido sigue publicado.
+
+### Ejecutar desde tu computador
+
+Si Doctoralia bloquea los servidores de GitHub (`suspended` con `access_denied` en `reports/ratings.json`), ejecútalo desde un computador en Chile con la misma configuración. No cambies el user-agent ni uses VPN o proxies para disfrazar el origen.
 
 ```bash
 git pull
 npm ci
-SCRAPE_SOURCES=doctoralia SCRAPE_LIMIT_LISTINGS=2 npm run scrape:ratings   # prueba corta (unos minutos)
-cat reports/ratings.json                                                   # revisa estado y motivo
-npm run scrape:ratings                                                     # ejecución completa (hasta 700 consultas, ~30 min)
+SCRAPE_SOURCES=doctoralia SCRAPE_LIMIT_PROFILES=20 npm run scrape:ratings   # prueba corta (1 a 2 minutos)
+cat reports/doctoralia.json                                                 # revisa estado, cola y conteos
+SCRAPE_SOURCES=doctoralia npm run scrape:ratings                            # hasta 300 minutos, se puede repetir
 npm run validate && npm run build && npm test
-git add public/data/catalog.json
-git commit -m "datos: actualizar valoraciones agregadas"
+git add -A public/data/catalog.json public/data/doctoralia estado
+git commit -m "datos: actualizar perfiles y valoraciones de Doctoralia"
 git push
 ```
 
-El push a `main` dispara el workflow de Pages, que valida y publica. Si un 403 aparece también desde Chile, la plataforma no permite este acceso: no reintentes; marca la fuente como pendiente.
-
-### Qué hace una ejecución
-
-1. Lee robots.txt y descarta toda ruta prohibida (gana la regla más larga; los comodines `*` y `$` se respetan).
-2. Recorre los listados `/{especialidad}/{comuna}` configurados (rotando el punto de partida cada semana), hasta `maxPagesPerListing` páginas y `maxProfilesPerListing` perfiles por listado.
-3. Lee cada perfil y extrae, en este orden: JSON-LD `aggregateRating`, microdatos `itemprop`, atributos `data-score` y el texto «N opiniones».
-4. Si no obtiene ninguna valoración, no modifica el catálogo y guarda hasta 3 páginas de muestra (con RUT borrados) en `reports/` para revisar si cambió la estructura.
-5. Si obtiene datos: reemplaza los registros renovados de esa fuente, conserva los no visitados consultados hace 45 días o menos, borra los más antiguos y no toca otras fuentes. La fuente queda `enabled` con licencia «Términos de uso de {plataforma} (no es una licencia abierta)».
-6. Un 403 suspende la fuente y deja el catálogo intacto. Un 429 respeta `Retry-After` y detiene la fuente en esa ejecución.
+El push a `main` dispara el workflow de Pages, que valida y publica. Si un 403 aparece también desde Chile, la plataforma no permite este acceso: no reintentes y vuelve a dejar `termsReviewedAt` vacío.
 
 ### Identificadores
 
-`doctoralia:{slug}` (profesional), `doctoralia:site:{hash}` (consulta, tipo `practice`), `org:doctoralia:{hash}` (centro) y `doctoralia:rating:{slug}` (valoración). Las consultas no aparecen en la pestaña «Centros». Dos fichas de plataformas distintas se muestran juntas solo si coinciden nombre con ambos apellidos, profesión, especialidad y una dirección (calle y número), o un número de registro oficial del RNPI con evidencia oficial.
+`doctoralia:{slug}` (profesional), `doctoralia:site:{hash}` (consulta, tipo `practice`), `org:doctoralia:{hash}` (centro) y `doctoralia:rating:{slug}` (valoración). La clave de una consulta es la calle con número y la comuna, así que dos profesionales en la misma dirección comparten sede. Las consultas no aparecen en la pestaña «Centros». Dos fichas de plataformas distintas se muestran juntas solo si coinciden nombre con ambos apellidos, profesión, especialidad y una dirección (calle y número), o un número de registro oficial del RNPI con evidencia oficial.
+
+## Top Doctors
+
+El adaptador de Top Doctors (listados y sitemap, solo datos agregados) sigue desactivado: `termsReviewedAt` es `null` en `scripts/topdoctors.json`. El 08-10-2026 su robots.txt y sus términos respondieron 404 a la herramienta de lectura. Una persona debe revisar <https://www.topdoctors.cl/info/terminos-legales/> en su navegador antes de activarlo, igual que con Doctoralia.

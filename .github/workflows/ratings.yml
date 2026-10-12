@@ -1,15 +1,21 @@
 name: Actualizar valoraciones
+# Recorre Doctoralia por partes: cada ejecución consulta perfiles durante unas 5 horas (una consulta cada 2,5 s)
+# y guarda el avance. La primera vuelta completa por toda la RM toma alrededor de dos semanas de ejecuciones diarias;
+# después, cada ejecución refresca los perfiles más antiguos y los que cambiaron.
 on:
   workflow_dispatch:
     inputs:
       sources:
         description: 'Fuentes separadas por coma'
         default: 'doctoralia,topdoctors'
-      limit_listings:
-        description: 'Máximo de listados por fuente (vacío = configuración)'
+      max_minutes:
+        description: 'Minutos de consulta en esta ejecución (vacío = configuración, 300)'
+        default: ''
+      limit_profiles:
+        description: 'Máximo de perfiles a leer (vacío = sin límite; útil para una prueba corta)'
         default: ''
   schedule:
-    - cron: '41 6 * * 3' # semanal, miércoles 06:41 UTC
+    - cron: '17 7 * * *' # diario, 07:17 UTC (madrugada en Chile)
 permissions:
   contents: write
   actions: write
@@ -20,39 +26,48 @@ jobs:
   ratings:
     if: github.event.repository.private == false
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # Límite de GitHub: 6 horas por trabajo. El recorrido se detiene solo a los 300 minutos y deja tiempo para guardar.
+    timeout-minutes: 345
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - run: npm ci --no-fund --no-audit
-      - run: npm run build
       - run: npm test
-      - name: Extraer valoraciones (respeta robots.txt, 1 consulta cada 2,5 s, tope 700)
+      - name: Extraer (respeta robots.txt, 1 consulta cada 2,5 s, guarda el avance)
+        id: scrape
         env:
           SCRAPE_SOURCES: ${{ inputs.sources || 'doctoralia,topdoctors' }}
-          SCRAPE_LIMIT_LISTINGS: ${{ inputs.limit_listings }}
+          SCRAPE_MAX_MINUTES: ${{ inputs.max_minutes }}
+          SCRAPE_LIMIT_PROFILES: ${{ inputs.limit_profiles }}
         run: npm run scrape:ratings
-      - name: Validar catálogo
+      - name: Validar catálogo, índice y fichas
+        id: validate
+        if: always() && steps.scrape.outcome != 'skipped'
         run: npm run validate
-      - name: Guardar catálogo solo si cambió
+      - name: Guardar datos solo si cambiaron y son válidos
         id: commit
+        if: always() && steps.validate.outcome == 'success'
         run: |
-          if git diff --quiet -- public/data/catalog.json; then
+          git add -A -- public/data/catalog.json public/data/doctoralia estado
+          if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "El catálogo no cambió."
+            echo "Los datos no cambiaron."
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add public/data/catalog.json
-            git commit -m "datos: actualizar valoraciones agregadas"
-            git push
+            git commit -q -m "datos: actualizar perfiles y valoraciones de Doctoralia"
+            # main pudo cambiar durante las horas de extracción: se integra antes de subir.
+            for i in 1 2 3; do
+              git pull -q --rebase origin main && git push -q && break
+              sleep 10
+            done
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Volver a publicar Pages
         # Los commits hechos con GITHUB_TOKEN no disparan otros workflows; por eso se lanza a mano.
-        if: steps.commit.outputs.changed == 'true'
+        if: always() && steps.commit.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run pages.yml --ref main
@@ -62,9 +77,12 @@ jobs:
           {
             echo "## Valoraciones"
             if [ -f reports/ratings.json ]; then
-              node -e 'const r=require("./reports/ratings.json");console.log("Catálogo modificado: "+(r.catalogChanged?"sí":"no")+"\n");console.log("| Fuente | Estado | Motivo | Consultas | Perfiles leídos | Con opiniones | Bloqueados por robots |");console.log("|---|---|---|---|---|---|---|");for(const s of r.sources)console.log(`| ${s.source} | ${s.status} | ${s.reason??""} | ${s.requests} | ${s.profilesFetched} | ${s.withRatings} | ${s.robotsBlocked} |`);'
+              node -e 'const r=require("./reports/ratings.json");console.log("Catálogo modificado: "+(r.catalogChanged?"sí":"no")+"\n");console.log("| Fuente | Estado | Motivo | Consultas | Perfiles leídos | En el índice | Con opiniones | Bloqueados por robots |");console.log("|---|---|---|---|---|---|---|---|");for(const s of r.sources)console.log(`| ${s.source} | ${s.status} | ${s.reason??""} | ${s.requests} | ${s.profilesFetched} | ${s.professionals} | ${s.withRatings} | ${s.robotsBlocked} |`);'
             else
               echo "No se generó reports/ratings.json."
+            fi
+            if [ -f reports/doctoralia.json ]; then
+              node -e 'const r=require("./reports/doctoralia.json");console.log("\n### Doctoralia\n");console.log("Detenido por: "+r.stoppedBy+". Perfiles en sitemaps: "+r.sitemaps.profiles+". Cola: "+Object.entries(r.queue).map(([k,v])=>k+" "+v).join(", ")+".");console.log("Leídos: "+r.fetched+" (RM "+r.rm+", solo online "+r.online+", fuera de la RM "+r.outside+", dados de baja "+r.gone+", errores "+r.errors+"). Fichas escritas: "+r.written+", sin cambios: "+r.unchanged+", retiradas: "+r.removed+".");'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Subir informes

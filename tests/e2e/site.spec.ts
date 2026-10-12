@@ -66,3 +66,42 @@ test('index.html sin compilar muestra el aviso de respaldo con instrucciones',as
  await expect(page.getByRole('alert')).toContainText('La página no pudo cargar',{timeout:8000});
  await expect(page.getByRole('alert')).toContainText('GitHub Actions');
 });
+
+// Índice y ficha FICTICIOS de Doctoralia con la estructura real (lector de perfiles sobre el fixture HTML).
+test('índice FICTICIO de Doctoralia: tarjetas, atención online y ficha completa sin nombres de pacientes',async({page})=>{
+ const {parseFullProfile}=await import('../../scripts/adapters/doctoralia-full');const F=await import('../fixtures/doctoralia-full-html');
+ const ana=parseFullProfile(F.FULL_PROFILE,'https://www.doctoralia.cl/perfil/ana-ficticia-uno')!;
+ const c=structuredClone(catalog);const source={id:'doctoralia',name:'Doctoralia Chile',owner:'TEST FIXTURE FICTICIO',url:'https://www.doctoralia.cl/',policyUrl:'https://www.doctoralia.cl/terminos-y-condiciones',status:'enabled',license:'Términos de uso de Doctoralia Chile (no es una licencia abierta)',mayPublish:true,mayRetain:true,mayDerive:true,reviewedAt:'2026-10-12',attribution:'FICTICIO',notes:'SYNTHETIC TEST ONLY'};
+ c.sources=[...c.sources.filter((s:any)=>s.id!=='doctoralia'),source];
+ const index={version:1,source:'doctoralia',generatedAt:'2026-10-12T06:00:00.000Z',specialties:{psicologo:['Psicología','Psicólogo']},
+  sites:[['aaaaaaaaaaaa','bbbbbbbbbbbb','Centro FICTICIO Norte','Avenida Ficticia 427','Providencia',-33.4323196,-70.6182404]],
+  professionals:[{id:'ana-ficticia-uno',n:'Ana FICTICIA Uno',t:'Dra.',s:['psicologo'],k:['aaaaaaaaaaaa'],r:[4.8,1204],v:3,l:'2026-09-27',o:true,f:'2026-10-12'},
+   {id:'carla-ficticia-tres',n:'Carla FICTICIA Tres',t:'Ps.',s:['psicologo'],k:[],r:[5,3],v:0,l:null,o:true,f:'2026-10-12'}]};
+ await page.route('**/data/catalog.json',route=>route.fulfill({json:c}));
+ await page.route('**/data/doctoralia/indice.json',route=>route.fulfill({json:index}));
+ await page.route('**/data/doctoralia/perfiles/ana-ficticia-uno.json',route=>route.fulfill({json:ana}));
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.setViewportSize({width:1280,height:900});await page.goto('/');
+ await expect(page.getByRole('heading',{name:'2 profesionales',exact:true})).toBeVisible();
+ const carla=page.locator('.result-card',{hasText:'Carla FICTICIA Tres'});
+ await expect(carla).toContainText('Atención online');await expect(carla).toContainText('Sin consulta presencial publicada en la RM');
+ await page.getByLabel('Buscar por nombre, especialidad o comuna').fill('psicologa providencia');
+ await expect(page.getByRole('heading',{name:'1 profesionales',exact:true})).toBeVisible();
+ await page.locator('.result-card h3 a').first().click();
+ await expect(page.getByRole('heading',{level:1})).toHaveText('Ana FICTICIA Uno');
+ const detail=page.locator('.doctoralia-detail');
+ await expect(detail.getByRole('heading',{name:'Información publicada en Doctoralia'})).toBeVisible();
+ await expect(detail).toContainText('Desde $35.000');
+ await expect(detail).toContainText('Isapre Banmédica');
+ await expect(detail).toContainText('Esperé mucho. Mi rut [RUT omitido] quedó en el formulario.');
+ await expect(detail).toContainText('Respuesta del profesional');
+ await expect(detail).toContainText('fuera de la Región Metropolitana');
+ await expect(detail).not.toContainText('Juan P.');await expect(detail).not.toContainText('12.345.678-5');
+ await expect(detail.getByRole('link',{name:/Ver el perfil en Doctoralia/})).toBeVisible();
+ expect(await page.evaluate(()=>[...document.images].filter(i=>!i.src.startsWith(location.origin)).length)).toBe(0);
+ const result=await new AxeBuilder({page}).analyze();expect(result.violations).toEqual([]);
+ await page.setViewportSize({width:360,height:800});
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+ const small=await new AxeBuilder({page}).analyze();expect(small.violations).toEqual([]);
+ expect(errors).toEqual([]);
+});

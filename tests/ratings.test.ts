@@ -305,10 +305,14 @@ test('ejecución: sin revisión de términos no se hace ninguna consulta; fixtur
   } finally { await rm(t.dir, {recursive: true, force: true}); }
 });
 
-test('configuración real: fuentes con revisión de términos pendiente, pausa ≥2,5 s, cuota 700 y retención 45 días', async () => {
-  for (const id of ['doctoralia', 'topdoctors']) {
-    const cfg = JSON.parse(await readFile(`scripts/${id}.json`, 'utf8')) as SourceConfig;
-    assert.ok(cfg.minIntervalMs >= 2500); assert.equal(cfg.maxRequests, 700); assert.equal(cfg.retentionDays, 45);
-    assert.ok(cfg.domains.every(d => d.endsWith('.cl')));
-  }
+test('configuración real: Doctoralia en recorrido completo con términos revisados; Top Doctors sigue pendiente', async () => {
+  const d = JSON.parse(await readFile('scripts/doctoralia.json', 'utf8'));
+  assert.equal(d.mode, 'full');
+  assert.match(d.termsReviewedAt, /^\d{4}-\d{2}-\d{2}$/, 'una persona revisó los términos');
+  assert.ok(d.minIntervalMs >= 2500, 'una consulta cada 2,5 s como mínimo');
+  assert.ok(d.maxMinutes <= 330, 'cabe en el límite de 6 horas de GitHub Actions con margen para guardar');
+  assert.deepEqual(d.domains, ['www.doctoralia.cl']);
+  const t = JSON.parse(await readFile('scripts/topdoctors.json', 'utf8')) as SourceConfig;
+  assert.equal(t.termsReviewedAt, null, 'Top Doctors no se consulta sin revisión de sus términos');
+  assert.ok(t.minIntervalMs >= 2500); assert.equal(t.maxRequests, 700); assert.equal(t.retentionDays, 45);
 });

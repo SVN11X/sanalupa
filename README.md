@@ -2,7 +2,7 @@
 
 Aplicación estática React + TypeScript para buscar atención de salud con evidencia visible, fichas, comparación, favoritos locales y mapa Leaflet. Compatible con GitHub Pages y sin backend permanente, claves privadas ni servicios de pago obligatorios.
 
-**Estado real (8-10-2026):** 18 centros cartografiados, 0 profesionales y 0 valoraciones publicadas. El extractor de valoraciones de Doctoralia y Top Doctors está implementado y probado con páginas simuladas, pero **no se activa hasta que una persona revise los términos de uso** de cada plataforma (ver `FUENTES.md` y `docs/AMPLIAR.md`). Los centros no se presentan como médicos. La licencia abierta de OSM no equivale a validación clínica ni confirmación de atención actual.
+**Estado (12-10-2026):** 18 centros cartografiados. El recorrido completo de Doctoralia quedó activado tras la revisión humana de sus términos de uso (12-10-2026). Corre a diario en GitHub Actions y publica a cada profesional con consulta en la Región Metropolitana, con su ficha completa y sus opiniones. La primera vuelta por toda la región toma cerca de dos semanas de ejecuciones diarias: hasta la primera ejecución, el sitio sigue mostrando 0 profesionales. Top Doctors sigue desactivado (términos sin revisar). Los centros no se presentan como médicos. La licencia abierta de OSM no equivale a validación clínica ni confirmación de atención actual.
 
 ## Publicar en GitHub Pages
 
@@ -37,21 +37,30 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
+Si Chromium ya está instalado en otra ruta, indícala con `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/ruta/a/chrome npm run test:e2e`.
+
 `npm test` cubre el lector de robots.txt, los adaptadores de valoraciones (con páginas simuladas FICTICIAS), la fusión por fuente, normalización, homónimos, entidad valorada, fórmula bayesiana, búsqueda, coordenadas ausentes, permisos de datos, 403/429/timeout/cuotas y publicación atómica. Dos pruebas revisan además el `dist/` existente: compila antes de ejecutarlas.
 
 Las pruebas Playwright incluyen 360, 768 y 1280 px, accesibilidad con axe, fichas, regreso con filtros, favoritos, comparación, geolocalización denegada y mapa. Bloquean las teselas reales para no generar descargas de mapas por bots. `QA_URL` permite usar un servidor ya disponible; `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` permite indicar Chromium instalado. El workflow **Comprobar navegador** es manual. Véase `VALIDACION.md`: estas pruebas visuales no pudieron ejecutarse en el entorno de entrega.
 
-## Valoraciones de médicos
+## Profesionales y opiniones de Doctoralia
 
 ```bash
-npm run scrape:ratings                                   # todas las fuentes configuradas
-SCRAPE_SOURCES=doctoralia SCRAPE_LIMIT_LISTINGS=1 npm run scrape:ratings   # prueba corta
+npm run scrape:ratings                                                  # ejecución completa (hasta 300 minutos)
+SCRAPE_SOURCES=doctoralia SCRAPE_LIMIT_PROFILES=20 npm run scrape:ratings   # prueba corta: 20 perfiles
 ```
 
-- Configuración por fuente en `scripts/doctoralia.json` y `scripts/topdoctors.json` (especialidades, comunas, páginas, perfiles por listado, pausa, cuota y días de retención).
-- Respeta robots.txt (lector propio en `scripts/robots.ts`), una consulta cada 2,5 s por dominio como mínimo, tope de 700 consultas por ejecución, se detiene ante 429 o 403. No usa proxies, CAPTCHA ni navegadores automatizados.
-- Si no obtiene ninguna valoración, no toca el catálogo y deja muestras en `reports/` (`reports/ratings.json` explica el motivo).
-- El workflow **Actualizar valoraciones** (`.github/workflows/ratings.yml`) corre cada semana y a pedido, guarda el catálogo solo si cambió y vuelve a lanzar la publicación de Pages.
+**Qué extrae.** Todo lo que muestra cada perfil: nombre y título, especialidades, descripción, formación, experiencia, idiomas, enfermedades que atiende, publicaciones, premios, certificados y redes, servicios con precio, cada lugar de consulta (dirección, comuna, coordenadas, teléfonos, sitio web, previsiones, formas de pago, servicios y si permite reservar), la nota y la cantidad de opiniones, las opiniones visibles (fecha, nota, tipo de verificación, lugar, servicio, texto y respuesta del profesional) y las preguntas respondidas. Hay dos excepciones deliberadas: el nombre de quien escribe cada opinión (es un dato de salud de otra persona) y cualquier RUT, incluido el que aparece en «Núm. Colegiado».
+
+**Cómo recorre.** Descubre los perfiles en los sitemaps públicos de Doctoralia (unos 83.000 en todo Chile), lee cada uno con una consulta cada 2,5 segundos como mínimo, respeta robots.txt y se detiene ante un 403 o un 429. Publica a quien tiene una consulta presencial en la RM o atiende online declarando una comuna de la RM. Guarda el avance cada 250 perfiles en `estado/doctoralia.json`, así que la ejecución siguiente sigue donde quedó. Después de la primera vuelta, cada día refresca los perfiles que cambiaron y los consultados hace más de 14 días. Los de fuera de la RM se revisan cada 120 días.
+
+**Archivos.** `public/data/doctoralia/indice.json` es el índice compacto que carga el sitio (una fila por profesional). `public/data/doctoralia/perfiles/{slug}.json` es la ficha completa, que se descarga solo al abrir esa ficha. `reports/doctoralia.json` resume cada ejecución. La configuración está en `scripts/doctoralia.json` (`termsReviewedAt` vence a los 365 días).
+
+**Pedidos de retiro.** Si un profesional pide salir del sitio, agrega su slug a `estado/doctoralia-excluidos.json`. La ejecución siguiente retira su fila y su ficha, y no lo vuelve a consultar.
+
+**Si GitHub queda bloqueado.** Si `reports/ratings.json` muestra `suspended` con `access_denied`, la plataforma bloquea a los servidores de GitHub. Puedes ejecutar el mismo comando desde tu computador (ver `docs/AMPLIAR.md`). No uses proxies ni cambies el user-agent para disfrazar el origen.
+
+El workflow **Actualizar valoraciones** (`.github/workflows/ratings.yml`) corre cada día y a pedido, valida los datos, los guarda solo si cambiaron y vuelve a lanzar la publicación de Pages.
 
 ## Actualización y ampliación
 
@@ -82,7 +91,8 @@ El workflow semanal genera una propuesta revisable cuando existe un proveedor ha
 - Favoritos: solo IDs en localStorage, con eliminación desde Privacidad. La comparación y la geolocalización son temporales.
 - Distancia en línea recta, local. El mapa no se centra en la ubicación del visitante ni la envía a proveedores.
 - Contactos: dos sitios web identificados en OSM y cotejados con fuentes institucionales indexadas. Su carga HTTP directa no pudo comprobarse. Sin agenda en tiempo real, precios ni convenios inferidos.
-- Valoraciones: promedio y cantidad de opiniones por fuente, con su escala propia. Nunca se mezclan fuentes en un solo número. El orden «Mejor valorados» ajusta por cantidad de opiniones dentro de la misma fuente y especialidad. No se copian textos de opiniones.
+- Valoraciones: promedio y cantidad de opiniones por fuente, con su escala propia. Nunca se mezclan fuentes en un solo número. El orden «Mejor valorados» ajusta por cantidad de opiniones dentro de la misma fuente y especialidad. La ficha muestra las opiniones visibles en Doctoralia sin el nombre de quien opina. El texto de las opiniones no influye en el orden.
+- Profesionales que solo atienden online aparecen en la búsqueda general, pero no en el filtro por comuna, porque no tienen una consulta presencial.
 - Reportes: borrador descargable y vínculo para corregir OSM. No hay correo de recepción inventado ni envío automático.
 
 ## Documentación

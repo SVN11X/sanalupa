@@ -1,0 +1,4 @@
+{
+  "nota": "Perfiles de Doctoralia que no se publican en el sitio, por ejemplo porque la persona pidió salir. Agrega el slug de su URL (https://www.doctoralia.cl/perfil/{slug}). La siguiente ejecución retira su fila y su ficha, y no vuelve a consultarlo.",
+  "slugs": []
+}

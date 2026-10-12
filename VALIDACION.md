@@ -64,3 +64,17 @@ La evidencia disponible demuestra compilación y lógica de datos correctas. **N
 | `SCRAPE_LIMIT_LISTINGS=1 npm run scrape:ratings` | Doctoralia y Top Doctors `skipped` con motivo `terms_review_required`, 0 consultas, catálogo sin cambios |
 
 No verificado: el extractor contra las páginas reales (el entorno de mantenimiento no tiene acceso de red a esas plataformas y la revisión de términos está pendiente) ni el sitio desplegado en Pages.
+
+## Ejecución del 12 de octubre de 2026: recorrido completo de Doctoralia (Node 22.22.0, Chromium de Playwright)
+
+| Comando | Resultado real |
+|---|---|
+| `npm run build` | Compilación correcta (`✓ built`) |
+| `npm test` | 59 pruebas, 59 aprobadas, 0 fallidas. Incluye el lector completo de perfiles, el recorrido con sitemaps, prioridades, reanudación, 403, 429, presupuesto de tiempo, exclusiones y una prueba de rendimiento con 40.000 profesionales |
+| `npm run validate` | Catálogo válido. Índice de Doctoralia vacío y válido (0 filas, 0 fichas) hasta la primera ejecución real |
+| `npm run test:e2e` | 16 aprobadas. La nueva prueba recorre tarjetas, atención online y la ficha completa con axe a 1280 y 360 px, sin imágenes de terceros ni nombres de pacientes |
+| Lector contra páginas reales | En un navegador, sobre 11 perfiles reales de Doctoralia (un cardiólogo y diez psicólogos de Providencia): nombre, título, especialidades, consultas, previsiones, pagos, teléfonos, precios, opiniones con respuesta y preguntas se leyeron sin errores (unos 23 ms por perfil). Las direcciones del tipo «Sesión Online» se reconocieron como atención online |
+
+Rendimiento medido con 45.000 profesionales sintéticos: leer y validar el índice 0,6 s, convertirlo al catálogo 0,3 s, ordenar por opiniones 0,2 s, primera búsqueda escrita 0,2 s y las siguientes menos de 0,05 s.
+
+No verificado: el recorrido completo contra Doctoralia real (este entorno no resuelve el dominio, la ejecución de prueba terminó con `network_error` sin escribir datos) ni el comportamiento de Doctoralia frente a los servidores de GitHub Actions. Tampoco el sitio desplegado en Pages.

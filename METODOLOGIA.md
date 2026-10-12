@@ -34,7 +34,7 @@ Filtros explícitos prevalecen sobre la comuna/especialidad reconocidas en texto
 
 ## Orden y opiniones
 
-Nombre A–Z es el orden predeterminado; distancia requiere una ubicación otorgada de forma explícita. El control de valoraciones está desactivado en el catálogo inicial. No se suma automáticamente entre plataformas, no se transfiere una puntuación de organización/sede a una persona y no se utiliza texto de opiniones.
+Nombre A–Z es el orden predeterminado; distancia requiere una ubicación otorgada de forma explícita. El control de valoraciones está desactivado en el catálogo inicial. No se suma automáticamente entre plataformas, no se transfiere una puntuación de organización/sede a una persona y el texto de las opiniones no influye en el orden (solo se muestra en la ficha).
 
 Con fuente autorizada para publicación **y derivación**, se utiliza:
 
