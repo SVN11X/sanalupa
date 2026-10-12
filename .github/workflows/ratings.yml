@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci --no-fund --no-audit
+      - run: npm run build
       - run: npm test
       - name: Extraer (respeta robots.txt, 1 consulta cada 2,5 s, guarda el avance)
         id: scrape
