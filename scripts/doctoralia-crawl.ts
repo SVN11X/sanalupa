@@ -20,7 +20,7 @@ import {parseRobots, robotsAllows, robotsCrawlDelay, ALLOW_ALL, type Robots} fro
 import {normalize} from '../src/geo';
 import {CatalogSchema, type Catalog} from '../src/schema';
 import {
-  DoctoraliaIndexSchema, DoctoraliaProfileSchema, IndexRowSchema, IndexSiteSchema, emptyIndex, rmConsultations, serializeIndex,
+  DoctoraliaIndexSchema, DoctoraliaProfileSchema, IndexRowSchema, IndexSiteSchema, dedupeSites, emptyIndex, rmConsultations, serializeIndex,
   type DoctoraliaIndex, type DoctoraliaProfile, type IndexRow, type IndexSite,
 } from '../src/doctoralia';
 import {specialtyFromSlug} from '../src/specialties';
@@ -73,6 +73,8 @@ export type CrawlReport = {
 export type Deps = {fetch?: typeof fetch; guard?: typeof guardDestination; wait?: (ms: number) => Promise<void>; log?: (m: string) => void; clock?: () => number};
 
 const day = (d: Date) => d.toISOString().slice(0, 10);
+/** Mismo patrón de RUT que usan la validación y el esquema del catálogo. */
+const RUT = /\b\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]\b/;
 const daysBetween = (a: string, b: string) => (Date.parse(b) - Date.parse(a)) / 86400000;
 
 // ---------- lectura y escritura ----------
@@ -100,12 +102,12 @@ function indexFrom(book: Book, generatedAt: string): DoctoraliaIndex {
   const rows = [...book.rows.values()].sort((a, b) => a.id.localeCompare(b.id));
   const used = new Set(rows.flatMap(r => r.k));
   const usedSpecs = new Set(rows.flatMap(r => r.s));
-  return {
+  return dedupeSites({
     version: 1, source: 'doctoralia', generatedAt,
     specialties: Object.fromEntries([...book.specialties].filter(([k]) => usedSpecs.has(k)).sort(([a], [b]) => a.localeCompare(b))),
     sites: [...book.sites.values()].filter(s => used.has(s[0])).sort((a, b) => a[0].localeCompare(b[0])),
     professionals: rows,
-  };
+  });
 }
 
 /** Clave estable de una sede: calle y número normalizados + comuna (igual criterio que ratings-parts). */
@@ -217,9 +219,15 @@ export async function runDoctoralia(cfg: DoctoraliaConfig, opts: {
     if (final) for (const [slug, row] of book.rows) if (daysBetween(row.f, today) > cfg.retentionDays) {
       book.rows.delete(slug); await rm(PROFILE_FILE(paths.profilesDir, slug), {force: true}); report.removed++; dirty = true;
     }
+    // Una fila con algo parecido a un RUT (por ejemplo, dentro de una ruta) se retira en vez de detener todo.
+    for (const [slug, row] of book.rows) if (RUT.test(JSON.stringify(row)) || book.rows.get(slug)!.k.some(k => RUT.test(JSON.stringify(book.sites.get(k) ?? '')))) {
+      book.rows.delete(slug); await rm(PROFILE_FILE(paths.profilesDir, slug), {force: true}); report.removed++; dirty = true;
+      const p = state.profiles[slug]; if (p) { p.s = 'error'; p.e = cfg.maxErrors; }
+      log(`${slug}: fila retirada por contener un posible RUT`);
+    }
     const ix = indexFrom(book, now.toISOString());
     DoctoraliaIndexSchema.parse(ix);
-    if (/\b\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]\b/.test(serializeIndex(ix))) throw new Error('rut_in_index');
+    if (RUT.test(serializeIndex(ix))) throw new Error('rut_in_index');
     (opts.policy ?? (() => {}))(ix);
     state.updatedAt = now.toISOString();
     await writeAtomic(paths.state, serializeState(state));
@@ -329,6 +337,18 @@ export async function runDoctoralia(cfg: DoctoraliaConfig, opts: {
         continue;
       }
       st.e = 0; st.f = today;
+      // La ruta del sitemap puede redirigir a otro perfil (cambio de nombre). Si el destino también está en el
+      // sitemap, esta ruta queda como baja y el destino se procesa por su cuenta. Si no, se guarda con la ruta
+      // del sitemap, para que la fila del índice y el archivo de la ficha siempre tengan el mismo nombre.
+      if (profile.slug !== slug) {
+        if (state.profiles[profile.slug] && state.profiles[profile.slug].s !== 'baja') {
+          st.s = 'baja'; report.gone++;
+          if (book.rows.delete(slug)) { dirty = true; report.removed++; }
+          await rm(PROFILE_FILE(paths.profilesDir, slug), {force: true});
+          continue;
+        }
+        profile.slug = slug; profile.url = `${cfg.baseUrl}/perfil/${slug}`;
+      }
       const entry = rowFor(profile, today);
       if (!entry) {
         st.s = 'fuera'; report.outside++;
@@ -343,7 +363,12 @@ export async function runDoctoralia(cfg: DoctoraliaConfig, opts: {
       for (const s of entry.sites) if (!book.sites.has(s[0])) book.sites.set(s[0], s);
       for (const sp of profile.specialties) if (!book.specialties.has(sp.slug)) { const info = specialtyFromSlug(sp.slug, sp.label); book.specialties.set(sp.slug, [info.name, info.profession]); }
       book.rows.set(slug, entry.row); dirty = true;
-      const text = JSON.stringify(profile) + '\n';
+      // Último resguardo: cualquier RUT que haya quedado (por ejemplo en un enlace) se borra del archivo.
+      let text = JSON.stringify(profile) + '\n';
+      if (RUT.test(text)) {
+        text = text.replace(new RegExp(RUT.source, 'g'), '[RUT omitido]');
+        if (!DoctoraliaProfileSchema.safeParse(JSON.parse(text)).success) { book.rows.delete(slug); dirty = true; st.s = 'error'; st.e = cfg.maxErrors; report.errors++; await rm(PROFILE_FILE(paths.profilesDir, slug), {force: true}); continue; }
+      }
       const hash = shortHash(text);
       if (hash !== st.h) { await writeAtomic(PROFILE_FILE(paths.profilesDir, slug), text); st.h = hash; report.written++; }
       else report.unchanged++;

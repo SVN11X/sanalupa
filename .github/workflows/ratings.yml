@@ -46,6 +46,18 @@ jobs:
         id: validate
         if: always() && steps.scrape.outcome != 'skipped'
         run: npm run validate
+      - name: Conservar los datos si la validación falla
+        # Así unas horas de extracción no se pierden: los datos quedan descargables 7 días para revisarlos y recuperarlos.
+        if: always() && steps.validate.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: datos-sin-validar
+          path: |
+            public/data/catalog.json
+            public/data/doctoralia/
+            estado/
+          retention-days: 7
+          if-no-files-found: warn
       - name: Guardar datos solo si cambiaron y son válidos
         id: commit
         if: always() && steps.validate.outcome == 'success'

@@ -102,7 +102,7 @@ export type DoctoraliaIndex = {
 const Key = z.string().regex(/^[0-9a-f]{12}$/);
 export const IndexSiteSchema = z.tuple([Key, Key, z.string().min(1).max(180), z.string().min(1).max(180), z.string().refine(c => canonicalCommune(c) === c, 'Comuna desconocida'), z.number().nullable(), z.number().nullable()]);
 export const IndexRowSchema = z.object({
-  id: z.string().regex(SLUG).max(200), n: z.string().min(1).max(180), t: z.string().max(20).nullable(),
+  id: z.string().regex(SLUG).max(140) /* la URL del perfil debe caber en 180 caracteres */, n: z.string().min(1).max(180), t: z.string().max(20).nullable(),
   s: z.array(z.string().regex(SLUG)).max(20), k: z.array(Key).max(40),
   r: z.tuple([z.number().min(1).max(5).nullable(), z.number().int().nonnegative().nullable()]),
   v: z.number().int().min(0).max(50), l: DateOnly.nullable(), o: z.boolean(), f: DateOnly,
@@ -112,6 +112,31 @@ export const DoctoraliaIndexSchema = z.object({
   specialties: z.record(z.string(), z.tuple([z.string().min(1).max(120), z.string().min(1).max(120)])),
   sites: z.array(IndexSiteSchema), professionals: z.array(IndexRowSchema),
 }).strict();
+
+/**
+ * Une sedes repetidas. Dos profesionales pueden declarar la misma consulta (mismo centro, calle y coordenadas)
+ * en comunas distintas, y eso produce dos claves para un mismo lugar. El catálogo exige una sola sede por
+ * centro, dirección y coordenadas, así que se conserva la primera clave (en orden) y las filas se reasignan a ella.
+ */
+export function dedupeSites(ix: DoctoraliaIndex): DoctoraliaIndex {
+  const seat = (s: IndexSite) => {
+    const [, org, , street, , lat, lon] = s;
+    const point = lat !== null && lon !== null && inRegion({lat, lon});
+    return [org, street, point ? lat : '', point ? lon : ''].join('|');
+  };
+  const first = new Map<string, string>();
+  const alias = new Map<string, string>();
+  for (const s of [...ix.sites].sort((a, b) => a[0].localeCompare(b[0]))) {
+    const k = seat(s), kept = first.get(k);
+    if (kept) alias.set(s[0], kept); else first.set(k, s[0]);
+  }
+  if (!alias.size) return ix;
+  return {
+    ...ix,
+    sites: ix.sites.filter(s => !alias.has(s[0])),
+    professionals: ix.professionals.map(r => r.k.some(k => alias.has(k)) ? {...r, k: [...new Set(r.k.map(k => alias.get(k) ?? k))]} : r),
+  };
+}
 
 export const emptyIndex = (): DoctoraliaIndex => ({version: 1, source: 'doctoralia', generatedAt: null, specialties: {}, sites: [], professionals: []});
 
@@ -131,7 +156,8 @@ export type CatalogParts = Pick<Catalog, 'professionals' | 'sites' | 'organizati
  * Convierte el índice al formato del catálogo. Solo se usa si la fuente figura habilitada en catalog.json
  * (ahí está el permiso de publicación). Las evidencias se comparten entre campos para ahorrar memoria.
  */
-export function expandIndex(ix: DoctoraliaIndex): CatalogParts {
+export function expandIndex(input: DoctoraliaIndex): CatalogParts {
+  const ix = dedupeSites(input);
   const checked = ix.generatedAt ?? '1970-01-01';
   const siteEv: EvidenceType = {sourceId: DOCTORALIA_ID, url: DOCTORALIA_BASE + '/', checkedAt: checked.slice(0, 10), sourceUpdatedAt: null, statement: 'source_record'};
   const sites = new Map<string, SiteType>();

@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {parseFullProfile, parseSitemap, profileSlug, parseDate, declaredRegistryNumbers, redactAuthor, tidy} from '../scripts/adapters/doctoralia-full';
 import {runDoctoralia, rowFor, buildQueue, type DoctoraliaConfig, type CrawlState, type Paths} from '../scripts/doctoralia-crawl';
-import {DoctoraliaIndexSchema, DoctoraliaProfileSchema, expandIndex, mergeIndexIntoCatalog, serializeIndex, emptyIndex, type DoctoraliaIndex} from '../src/doctoralia';
+import {DoctoraliaIndexSchema, DoctoraliaProfileSchema, dedupeSites, expandIndex, mergeIndexIntoCatalog, serializeIndex, emptyIndex, type DoctoraliaIndex} from '../src/doctoralia';
 import {CatalogSchema, type Catalog} from '../src/schema';
 import {resultsFromCatalog, searchResults, parseQuery, type Filters} from '../src/domain';
 import {assertIndexPublishable} from '../scripts/publication-policy';
@@ -263,6 +263,73 @@ test('recorrido: presupuesto de tiempo y de perfiles, y reanudación en la sigui
     const st = JSON.parse(await readFile(w.state, 'utf8')) as CrawlState;
     assert.ok(Object.values(st.profiles).every(p => p.f), 'todos consultados tras varias ejecuciones');
   } finally { await rm(w.dir, {recursive: true, force: true}); }
+});
+
+test('recorrido: la misma consulta declarada en dos comunas queda como una sola sede y el catálogo sigue válido', async () => {
+  // Caso real del 12-10-2026: «Sede posiblemente duplicada» (mismo centro, calle y coordenadas con distinta comuna).
+  const w = await workspace();
+  try {
+    const eva = F.PROFILE_DARIO.replace(/dario-ficticio-cuatro/g, 'eva-ficticia-cinco').replace('Dario FICTICIO Cuatro', 'Eva FICTICIA Cinco').replace(/Providencia/g, 'Santiago');
+    const pages = site();
+    pages[D + '/perfil/eva-ficticia-cinco'] = {status: 200, body: eva};
+    pages[D + '/sitemaps/monolith/sitemap.doctor.xml'] = {status: 200, body: F.SITEMAP_DOCTORS.replace('</urlset>', '<url><loc>https://www.doctoralia.cl/perfil/eva-ficticia-cinco</loc><lastmod>2026-09-20T05:00:00-03:00</lastmod></url></urlset>')};
+    const r = await run(w, pages, [], '2026-10-12T06:00:00Z');
+    assert.equal(r.rm, 3);
+    const ix = DoctoraliaIndexSchema.parse(JSON.parse(await readFile(w.index, 'utf8')));
+    assert.equal(ix.sites.filter(s => s[3] === 'Avenida Ficticia 427').length, 1);
+    const catalog = CatalogSchema.parse(JSON.parse(await readFile(w.catalog, 'utf8')));
+    const merged = CatalogSchema.parse(mergeIndexIntoCatalog(catalog, ix));
+    const evaRow = merged.professionals.find(p => p.id === 'doctoralia:eva-ficticia-cinco')!;
+    const anaRow = merged.professionals.find(p => p.id === 'doctoralia:ana-ficticia-uno')!;
+    assert.ok(evaRow.siteIds.some(id => anaRow.siteIds.includes(id)), 'Eva y Ana comparten la sede unificada');
+  } finally { await rm(w.dir, {recursive: true, force: true}); }
+});
+
+test('recorrido: una ruta del sitemap que redirige a otro perfil no duplica ni desordena fichas', async () => {
+  const w = await workspace();
+  try {
+    const pages = site();
+    // carla-ficticia-tres responde con la página de Ana (perfil renombrado) y beto-ficticio-dos con un perfil sin sitemap propio.
+    pages[D + '/perfil/carla-ficticia-tres'] = {status: 200, body: F.FULL_PROFILE};
+    pages[D + '/perfil/beto-ficticio-dos'] = {status: 200, body: F.PROFILE_DARIO.replace(/dario-ficticio-cuatro/g, 'nuevo-nombre-ficticio')};
+    await run(w, pages, [], '2026-10-12T06:00:00Z');
+    const ix = DoctoraliaIndexSchema.parse(JSON.parse(await readFile(w.index, 'utf8')));
+    assert.deepEqual(ix.professionals.map(p => p.id), ['ana-ficticia-uno', 'beto-ficticio-dos', 'dario-ficticio-cuatro']);
+    assert.deepEqual((await readdir(w.profilesDir)).sort(), ['ana-ficticia-uno.json', 'beto-ficticio-dos.json', 'dario-ficticio-cuatro.json']);
+    const beto = DoctoraliaProfileSchema.parse(JSON.parse(await readFile(join(w.profilesDir, 'beto-ficticio-dos.json'), 'utf8')));
+    assert.equal(beto.slug, 'beto-ficticio-dos');
+    const st = JSON.parse(await readFile(w.state, 'utf8')) as CrawlState;
+    assert.equal(st.profiles['carla-ficticia-tres'].s, 'baja');
+    CatalogSchema.parse(mergeIndexIntoCatalog(CatalogSchema.parse(JSON.parse(await readFile(w.catalog, 'utf8'))), ix));
+  } finally { await rm(w.dir, {recursive: true, force: true}); }
+});
+
+test('recorrido: un posible RUT en un enlace se borra de la ficha sin detener la ejecución', async () => {
+  const w = await workspace();
+  try {
+    const pages = site();
+    pages[ANA] = {status: 200, body: F.FULL_PROFILE.replace('https://ficticio.example.org/', 'https://ficticio.example.org/12345678-5/')};
+    const r = await run(w, pages, [], '2026-10-12T06:00:00Z');
+    assert.equal(r.status, 'published');
+    const text = await readFile(join(w.profilesDir, 'ana-ficticia-uno.json'), 'utf8');
+    assert.ok(!/12345678-5/.test(text) && text.includes('[RUT omitido]'));
+    DoctoraliaProfileSchema.parse(JSON.parse(text));
+  } finally { await rm(w.dir, {recursive: true, force: true}); }
+});
+
+test('sedes repetidas en un índice ya publicado se unen al cargarlo', () => {
+  const ix: DoctoraliaIndex = {...emptyIndex(), generatedAt: '2026-10-12T06:00:00.000Z', specialties: {psicologo: ['Psicología', 'Psicólogo']},
+    sites: [['aaaaaaaaaaaa', 'cccccccccccc', 'Centro FICTICIO', 'Avenida Ficticia 1', 'Providencia', -33.43, -70.61], ['bbbbbbbbbbbb', 'cccccccccccc', 'Centro FICTICIO', 'Avenida Ficticia 1', 'Santiago', -33.43, -70.61], ['dddddddddddd', 'cccccccccccc', 'Centro FICTICIO', 'Avenida Ficticia 1', 'Ñuñoa', null, null]],
+    professionals: [
+      {id: 'uno-ficticio', n: 'Uno FICTICIO', t: null, s: ['psicologo'], k: ['aaaaaaaaaaaa'], r: [5, 10], v: 0, l: null, o: false, f: '2026-10-12'},
+      {id: 'dos-ficticia', n: 'Dos FICTICIA', t: null, s: ['psicologo'], k: ['bbbbbbbbbbbb', 'aaaaaaaaaaaa'], r: [5, 10], v: 0, l: null, o: false, f: '2026-10-12'},
+      {id: 'tres-ficticia', n: 'Tres FICTICIA', t: null, s: ['psicologo'], k: ['dddddddddddd'], r: [5, 10], v: 0, l: null, o: false, f: '2026-10-12'},
+    ]};
+  const d = dedupeSites(ix);
+  assert.deepEqual(d.sites.map(s => s[0]), ['aaaaaaaaaaaa', 'dddddddddddd'], 'sin coordenadas es otra sede');
+  assert.deepEqual(d.professionals[1].k, ['aaaaaaaaaaaa']);
+  const base = CatalogSchema.parse(JSON.parse(JSON.stringify({schemaVersion: 1, publishedAt: '2026-10-12', geography: 'SYNTHETIC TEST ONLY', sources: [{id: 'doctoralia', name: 'Doctoralia Chile', owner: 'FICTICIO', url: D + '/', policyUrl: 'https://example.org/t', status: 'enabled', license: 'Términos', mayPublish: true, mayRetain: true, mayDerive: true, reviewedAt: '2026-10-12', attribution: 'x', notes: 'FICTICIO'}], professionals: [], organizations: [], sites: [], ratings: [], removedIds: []})));
+  assert.equal(CatalogSchema.parse(mergeIndexIntoCatalog(base, ix)).sites.length, 2, 'el sitio une las sedes aunque el índice las traiga repetidas');
 });
 
 test('recorrido: un perfil excluido se retira del índice y no se vuelve a consultar', async () => {

@@ -38,7 +38,7 @@ export const CatalogSchema=z.object({schemaVersion:z.literal(1),publishedAt:Date
   if(!p.identityEvidence)issue('Identidad profesional sin evidencia');
   if(p.credentials.registryNumber!==null&&p.credentials.evidence?.statement!=='official')issue('Número de registro sin evidencia oficial');
  }
- const seats=new Set<string>();for(const s of c.sites){const key=[s.organizationId,s.address?.value,s.location?.lat,s.location?.lon].join('|');if(seats.has(key))issue('Sede posiblemente duplicada');seats.add(key);}
+ const seats=new Set<string>();for(const s of c.sites){const key=[s.organizationId,s.address?.value,s.location?.lat,s.location?.lon].join('|');if(seats.has(key))issue('Sede posiblemente duplicada: '+s.id);seats.add(key);}
  for(const r of c.ratings){
   const s=sources.get(r.sourceId);if(!s||s.status!=='enabled'||!s.mayPublish)issue('Valoración sin autorización');
   if(r.mayDerive&&!s?.mayDerive)issue('Fuente no permite puntuación derivada');

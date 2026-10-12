@@ -78,3 +78,9 @@ No verificado: el extractor contra las páginas reales (el entorno de mantenimie
 Rendimiento medido con 45.000 profesionales sintéticos: leer y validar el índice 0,6 s, convertirlo al catálogo 0,3 s, ordenar por opiniones 0,2 s, primera búsqueda escrita 0,2 s y las siguientes menos de 0,05 s.
 
 No verificado: el recorrido completo contra Doctoralia real (este entorno no resuelve el dominio, la ejecución de prueba terminó con `network_error` sin escribir datos) ni el comportamiento de Doctoralia frente a los servidores de GitHub Actions. Tampoco el sitio desplegado en Pages.
+
+## Primera ejecución real en GitHub Actions (12 de octubre de 2026)
+
+El recorrido funcionó durante las 5 horas previstas: 7.190 consultas, 7.184 perfiles leídos sin errores de lectura, 2.678 profesionales de la RM y 2.361 con opiniones. Doctoralia no bloqueó a los servidores de GitHub. La validación final falló con «Sede posiblemente duplicada» (7 casos): el mismo centro, calle y coordenadas declarados en comunas distintas generaban dos sedes. Como la validación protege el guardado, esos datos no se publicaron.
+
+Corrección: las sedes repetidas se unen en una sola (al escribir el índice y al cargarlo en el sitio), una ruta del sitemap que redirige a otro perfil ya no puede desordenar fichas, un posible RUT en un enlace se borra sin detener la ejecución y, si la validación vuelve a fallar, el workflow guarda los datos como artefacto «datos-sin-validar» durante 7 días. Pruebas: 63 de unidad e integración y 16 de navegador, todas aprobadas.
