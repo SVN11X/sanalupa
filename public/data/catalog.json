@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "publishedAt": "2026-10-07",
+  "publishedAt": "2026-10-13T10:34:45.508Z",
   "geography": "37 comunas: criterio funcional INE 2020; ampliación seleccionable a 52 comunas RM",
   "sources": [
     {
@@ -36,17 +36,17 @@
     {
       "id": "doctoralia",
       "name": "Doctoralia Chile",
-      "owner": "Doctoralia Internet SL",
+      "owner": "Doctoralia Internet SL (grupo Docplanner)",
       "url": "https://www.doctoralia.cl/",
       "policyUrl": "https://www.doctoralia.cl/terminos-y-condiciones",
-      "status": "pending",
-      "license": null,
-      "mayPublish": false,
-      "mayRetain": false,
-      "mayDerive": false,
-      "reviewedAt": "2026-10-08",
-      "attribution": "Enlace externo; sin respaldo institucional",
-      "notes": "Adaptador listo. robots.txt permite listados y perfiles (08-10-2026). Falta que una persona lea las condiciones (PDF bloqueado para programas por robots.txt) antes de activar la extracción. Escala de 1 a 5."
+      "status": "enabled",
+      "license": "Términos de uso de Doctoralia Chile (no es una licencia abierta)",
+      "mayPublish": true,
+      "mayRetain": true,
+      "mayDerive": true,
+      "reviewedAt": "2026-10-12",
+      "attribution": "Datos de perfiles y opiniones tomados de Doctoralia Chile",
+      "notes": "Se publica la información visible de cada perfil con consulta en la Región Metropolitana (o atención online declarada en una comuna de la RM): nombre, título, especialidades, consultas (dirección, comuna, coordenadas, teléfonos, sitio web, previsiones, formas de pago y servicios), precios, formación, experiencia, idiomas, enfermedades tratadas, descripción, nota promedio, cantidad de opiniones, las opiniones visibles en el perfil (fecha, nota, verificación, lugar, servicio, texto y respuesta) y las preguntas respondidas. No se guarda el nombre de quien escribe cada opinión ni ningún RUT."
     },
     {
       "id": "topdoctors",
