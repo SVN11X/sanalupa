@@ -238,13 +238,17 @@ test('recorrido: 429 respeta Retry-After y no publica nada', async () => {
   try {
     const pages = site();
     pages[D + '/sitemap.xml'] = {status: 429, body: '', headers: {'Retry-After': '120'}};
+    // El catálogo copiado es el real del repositorio: tras la primera extracción exitosa Doctoralia ya figura habilitada.
+    // Por eso no se revisa el estado de la fuente, sino que el catálogo quede igual byte por byte.
+    const before = await readFile(w.catalog, 'utf8');
     const calls: string[] = [];
     const r = await run(w, pages, calls, '2026-10-12T06:00:00Z');
     assert.equal(r.status, 'suspended'); assert.match(r.reason!, /^rate_limited_until_/);
     assert.equal(calls.length, 2, 'robots.txt y el índice de sitemaps, nada más');
     assert.equal(r.indexRows, 0);
-    const c = CatalogSchema.parse(JSON.parse(await readFile(w.catalog, 'utf8')));
-    assert.notEqual(c.sources.find(s => s.id === 'doctoralia')?.status, 'enabled', 'sin filas no se habilita la fuente');
+    const after = await readFile(w.catalog, 'utf8');
+    assert.equal(after, before, 'sin filas no se toca el catálogo ni el estado de la fuente');
+    CatalogSchema.parse(JSON.parse(after));
   } finally { await rm(w.dir, {recursive: true, force: true}); }
 });
 
